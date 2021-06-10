@@ -6,7 +6,7 @@ class GlobalChat(commands.Cog):
 
 
   @commands.Cog.listener()
-  async def on_message(message):
+  async def on_message(self, message):
     return message
 
 
