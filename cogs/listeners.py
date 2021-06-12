@@ -20,5 +20,9 @@ class Events(commands.Cog):
     print(f"Logged in as {self.bot.user}")
     print(f"Id: {self.bot.user.id}")
 
+  @commands.command()
+  async def credits(self, ctx):
+    await ctx.send("DB provided by and ran by FrostiiWeeb#0400 \nAJTHATKID#0001 for his PFP \nJDJG Inc. Official#3493 as the owner and manager and programmer of the bot as well as FrostiiWeeb#0400 for also programming the bot.")
+
 def setup(bot):
   bot.add_cog(Events(bot))

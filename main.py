@@ -8,7 +8,7 @@ class GlobalChatBot(commands.Bot):
     super().__init__(*args, **kwargs)
 
   async def start(self,*args, **kwargs):
-    bot.db = await asyncpg.create_pool(os.getenv("DB_key"))
+    self.db = await asyncpg.create_pool(os.getenv("DB_key"))
 
     await super().start(*args, **kwargs)
 
@@ -18,9 +18,9 @@ class GlobalChatBot(commands.Bot):
 
 
 
-bot=GlobalChatBot(command_prefix="d!",intents=discord.Intents.all())
+bot=GlobalChatBot(command_prefix=commands.when_mentioned_or("d!"),intents=discord.Intents.all())
 
-
+bot.load_extension("jishaku")
 
 for filename in os.listdir('./cogs'):
   if filename.endswith('.py'):
