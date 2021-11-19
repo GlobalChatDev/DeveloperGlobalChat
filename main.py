@@ -7,7 +7,7 @@ class GlobalChatBot(commands.Bot):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
 
-  async def start(self,*args, **kwargs):
+  async def start(self, *args, **kwargs):
     self.db = await asyncpg.create_pool(os.getenv("DB_key"))
 
     await super().start(*args, **kwargs)
