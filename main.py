@@ -16,9 +16,7 @@ class GlobalChatBot(commands.Bot):
     await self.db.close()
     await super().close()
 
-
-
-bot=GlobalChatBot(command_prefix=commands.when_mentioned_or("d!"),intents=discord.Intents.all())
+bot=GlobalChatBot(command_prefix = commands.when_mentioned_or("d!"),intents=discord.Intents.all())
 
 bot.load_extension("jishaku")
 
