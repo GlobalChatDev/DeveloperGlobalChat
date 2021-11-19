@@ -1,4 +1,4 @@
-import discord, asyncpg, aiosqlite3
+import discord, asyncpg
 from discord.ext import commands
 import asyncio, os
 import B

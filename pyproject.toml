@@ -9,7 +9,6 @@ python = "^3.8"
 "discord.py" = "^1.7.2"
 flask = "^2.0.0"
 asyncpg = "^0.22.0"
-aiosqlite3 = "^0.3.0"
 jishaku = {git = "https://github.com/Gorialis/jishaku.git"}
 
 [tool.poetry.dev-dependencies]
