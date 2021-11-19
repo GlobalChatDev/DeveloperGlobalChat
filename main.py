@@ -1,6 +1,6 @@
-import discord, os, asyncpg, aiosqlite3
+import discord, asyncpg, aiosqlite3
 from discord.ext import commands
-import asyncio
+import asyncio, os
 import B
 
 class GlobalChatBot(commands.Bot):
