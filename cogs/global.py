@@ -33,7 +33,9 @@ class GlobalChat(commands.Cog):
     if not view.value:
       return await msg.edit("Not linking your channel to the global chat.")
 
-    await msg.edit("I can now link your channel.")
+    await msg.edit("I can now link your channel. Linking....")
+
+    #add value to linked_chat, a bit harder
 
   @commands.has_permissions(manage_messages = True)
   @commands.command(brief = "Adds yourself to the global chat with other developers", aliases = ["removelink"])
@@ -51,7 +53,9 @@ class GlobalChat(commands.Cog):
     if not view.value:
       return await msg.edit("Not unlinking your channel to the global chat.")
 
-    await msg.edit("I can now unlink your channel.")
+    await msg.edit("I can now unlink your channel, unlinking....")
+
+    #remove value from linked_chat, just literately run a delete script for this, with checking if it exist or not.
 
 
 def setup(bot):
