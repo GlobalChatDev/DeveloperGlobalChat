@@ -14,15 +14,13 @@ class GlobalChatBot(commands.Bot):
 
     self.linked_channels = [c.get("channel_id") for c in self.data]
 
-    self.testers = [529499034495483926, 745058406083198994]
-
     await super().start(*args, **kwargs)
 
   async def close(self):
     await self.db.close()
     await super().close()
 
-bot = GlobalChatBot(command_prefix = commands.when_mentioned_or("d!"), intents = discord.Intents.all())
+bot = GlobalChatBot(command_prefix = commands.when_mentioned_or("d!"), intents = discord.Intents.all(), owner_ids = [168422909482762240, 529499034495483926, 745058406083198994])
 
 for filename in os.listdir('./cogs'):
   if filename.endswith('.py'):

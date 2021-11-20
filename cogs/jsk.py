@@ -17,13 +17,7 @@ class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
       traceback.print_exc()
       
     #I need to fix all cog_command_error
-
-  async def cog_check(self, ctx: commands.Context):
-
-    if not await ctx.bot.is_owner(ctx.author) or not ctx.author.id in ctx.bot.testers:
-      raise commands.NotOwner("You must own this bot to use Jishaku.")
-    return True
-
+    
   @Feature.Command(parent="jsk", name="py", aliases=["python"])
   async def jsk_python(self, ctx: commands.Context, *, argument: codeblock_converter):
 
