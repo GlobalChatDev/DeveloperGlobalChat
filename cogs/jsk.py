@@ -20,7 +20,7 @@ class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
 
   async def cog_check(self, ctx: commands.Context):
 
-    if not await ctx.bot.is_owner(ctx.author) or ctx.author in ctx.bot.testers:
+    if not await ctx.bot.is_owner(ctx.author) or ctx.author.id in ctx.bot.testers:
       raise commands.NotOwner("You must own this bot to use Jishaku.")
     return True
 
