@@ -1,6 +1,7 @@
 from discord.ext import commands
 import utils
-import discord
+import discord, re
+from better_profanity import profanity
 
 class GlobalChat(commands.Cog):
   def __init__(self, bot):
@@ -14,9 +15,36 @@ class GlobalChat(commands.Cog):
       
     #I need to fix all cog_command_error
 
+  async def message_converter(self, message : discord.Message):
+    args = message.content
+    args = args or "Test Content"
+    for x in re.findall(r'<@!?([0-9]{15,20})>', args):
+      user = await self.bot.try_user(int(x))
+      args = args.replace(f"{re.match(rf'<@!?({x})>', args).group()}", f"@{user}")
+
+    ctx = await self.bot.get_context(message)
+    args = await commands.clean_content().convert(ctx, args)
+    args = profanity.censor(args, censor_char = "#")
+    return args
+
   @commands.Cog.listener()
   async def on_message(self, message):
-    return message
+    if message.channel.id in self.bot.linked_channels and not message.author.bot:
+      
+      args = await self.message_converter(message)
+
+      embed = discord.Embed(title = f"{message.guild}",
+      description = f"{args}", color = 15428885, timestamp = message.created_at)
+
+      embed.set_author(name=f"{message.author}", icon_url = message.author.display_avatar.url)
+
+      if message.guild: embed.set_thumbnail(url = message.guild.icon.url if message.guild.icon else "https://i.imgur.com/3ZUrjUP.png")
+
+      for c in self.bot.linked_channels:
+        channel = self.bot.get_channel(c)
+        if c == message.channel.id:
+            continue
+        await channel.send(embed = embed)
 
   @commands.has_permissions(manage_messages = True)
   @commands.command(brief = "Adds yourself to the global chat with other developers", aliases = ["addlink"])
@@ -46,7 +74,7 @@ class GlobalChat(commands.Cog):
       await self.bot.db.execute("INSERT INTO linked_chat values ($1, $2)", ctx.guild.id, ctx.channel.id)
 
     except:
-      return await ctx.send("you already linked a channel, please unlink it first.")
+      return await ctx.send("you already linked a channel, please unlink it first, this will update this in the future don't worry.")
 
     await msg.edit("Linked channel :D")
 

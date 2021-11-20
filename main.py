@@ -10,6 +10,10 @@ class GlobalChatBot(commands.Bot):
   async def start(self, *args, **kwargs):
     self.db = await asyncpg.create_pool(os.getenv("DB_key"))
 
+    self.data = await self.db.fetch("SELECT * FROM linked_chat")
+
+    self.linked_channels = [c.get("channel_id") for c in self.data]
+
     await super().start(*args, **kwargs)
 
   async def close(self):
