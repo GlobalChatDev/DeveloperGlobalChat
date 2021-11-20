@@ -29,7 +29,9 @@ class GlobalChat(commands.Cog):
 
   @commands.Cog.listener()
   async def on_message(self, message):
-    if message.channel.id in self.bot.linked_channels and not message.author.bot:
+
+    ctx = await self.bot.get_context(message)
+    if message.channel.id in self.bot.linked_channels and not message.author.bot and not ctx.valid:
       
       args = await self.message_converter(message)
 
