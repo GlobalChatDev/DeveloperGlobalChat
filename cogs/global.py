@@ -1,5 +1,6 @@
 from discord.ext import commands
 import utils
+import discord
 
 class GlobalChat(commands.Cog):
   def __init__(self, bot):
@@ -21,6 +22,12 @@ class GlobalChat(commands.Cog):
   @commands.command(brief = "Adds yourself to the global chat with other developers", aliases = ["addlink"])
   async def add_link(self, ctx):
 
+    if not ctx.guild:
+      return await ctx.send("this is not a guild appreantly, if it is report the problem to the developer thanks :D at JDJG Inc. Official#3493")
+
+    if not isinstance(ctx.channel, discord.TextChannel):
+      return await ctx.send("you must use in a textchannel")
+
     view = utils.BasicButtons(ctx, timeout = 30.0)
 
     msg = await ctx.send("This adds a link to the current channel. Do you want to do this?", view = view)
@@ -35,11 +42,20 @@ class GlobalChat(commands.Cog):
 
     await msg.edit("I can now link your channel. Linking....")
 
-    #add value to linked_chat, a bit harder
+    try:
+      await self.bot.db.execute("INSERT INTO linked_chat values ($1, $2)", ctx.guild.id, ctx.channel.id)
+
+    except:
+      return await ctx.send("you already linked a channel, please unlink it first.")
+
+    await msg.edit("Linked channel :D")
 
   @commands.has_permissions(manage_messages = True)
   @commands.command(brief = "Adds yourself to the global chat with other developers", aliases = ["removelink"])
   async def remove_link(self, ctx):
+
+    if not isinstance(ctx.channel, discord.TextChannel):
+      return await ctx.send("you must use in a text channel")
 
     view = utils.BasicButtons(ctx, timeout = 30.0)
 
@@ -55,8 +71,9 @@ class GlobalChat(commands.Cog):
 
     await msg.edit("I can now unlink your channel, unlinking....")
 
-    #remove value from linked_chat, just literately run a delete script for this, with checking if it exist or not.
+    await self.bot.db.execute("DELETE FROM linked_chat WHERE server_id = $1", ctx.guild.id)
 
+    await msg.edit("Unlinked channel....")
 
 def setup(bot):
   bot.add_cog(GlobalChat(bot))
