@@ -18,10 +18,15 @@ class GlobalChat(commands.Cog):
   async def message_converter(self, message : discord.Message):
     args = message.content
     args = args or "Test Content"
-    for x in re.findall(r'<@!?([0-9]{15,20})>', args):
-      user = await self.bot.try_user(int(x))
+    
+    try:
+      for x in re.findall(r'<@!?([0-9]{15,20})>', args):
+        user = await self.bot.try_user(int(x))
       args = args.replace(f"{re.match(rf'<@!?({x})>', args).group()}", f"@{user}")
-      #fix issue
+        #fix issue
+
+    except Exception as e:
+      print(f"error occured as {e}.")
 
     ctx = await self.bot.get_context(message)
     args = await commands.clean_content().convert(ctx, args)
@@ -31,7 +36,7 @@ class GlobalChat(commands.Cog):
   @commands.Cog.listener()
   async def on_message(self, message):
     
-    #I need a way to figure out how to slow down messages, from spam or just block them.
+    #I need a way to figure out how to slow down messages, from spam or just block them, also find out how to edit edited messages.
     ctx = await self.bot.get_context(message)
     if message.channel.id in self.bot.linked_channels and not message.author.bot and not ctx.valid and not ctx.prefix:
       
