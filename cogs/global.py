@@ -29,11 +29,17 @@ class GlobalChat(commands.Cog):
 
   @commands.Cog.listener()
   async def on_message(self, message):
-
+    
+    #I need a way to figure out how to slow down messages, from spam or just block them.
     ctx = await self.bot.get_context(message)
     if message.channel.id in self.bot.linked_channels and not message.author.bot and not ctx.valid and not ctx.prefix:
       
       args = await self.message_converter(message)
+
+      if len(args) >= 6000:
+        args = "Message Too Big, Author will be notifited"
+        
+        await ctx.send(f"{ctx.author.mention}, please use content less than 6000, either using a pastebin or something else, thanks")
 
       embed = discord.Embed(title = f"{message.guild}",
       description = f"{args}", color = 15428885, timestamp = message.created_at)
