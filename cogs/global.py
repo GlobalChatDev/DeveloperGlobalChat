@@ -31,7 +31,7 @@ class GlobalChat(commands.Cog):
   async def on_message(self, message):
 
     ctx = await self.bot.get_context(message)
-    if message.channel.id in self.bot.linked_channels and not message.author.bot and not ctx.valid:
+    if message.channel.id in self.bot.linked_channels and not message.author.bot and not ctx.valid and not ctx.prefix:
       
       args = await self.message_converter(message)
 
