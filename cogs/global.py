@@ -72,13 +72,18 @@ class GlobalChat(commands.Cog):
 
     await msg.edit("I can now link your channel. Linking....")
 
-    try:
-      await self.bot.db.execute("INSERT INTO linked_chat values ($1, $2)", ctx.guild.id, ctx.channel.id)
+    row = await self.bot.db.fetchrow("SELECT * FROM linked_chat WHERE server_id = $1", ctx.guild.id)
 
-    except:
-      return await ctx.send("you already linked a channel, please unlink it first, this will update this in the future don't worry.")
+    if row:
+      await ctx.send("you already linked a channel, we'll update it right now.")
 
+      await self.bot.db.execute("UPDATE linked_chat SET channel_id WHERE server_id = $2", ctx.guild.id)
+
+      self.bot.linked.channels.remove(row.get("channel_id"))
+
+    self.bot.linked_channels.append(ctx.channel.id)
     await msg.edit("Linked channel :D")
+    
 
   @commands.has_permissions(manage_messages = True)
   @commands.command(brief = "Adds yourself to the global chat with other developers", aliases = ["removelink"])
@@ -100,6 +105,11 @@ class GlobalChat(commands.Cog):
       return await msg.edit("Not unlinking your channel to the global chat.")
 
     await msg.edit("I can now unlink your channel, unlinking....")
+
+    row = await self.bot.db.fetchrow("SELECT * FROM linked_chat WHERE server_id = $1", ctx.guild.id)
+
+    if not row:
+      await ctx.send("Can't unlink from a channel that doesn't exist.")
 
     await self.bot.db.execute("DELETE FROM linked_chat WHERE server_id = $1", ctx.guild.id)
 
