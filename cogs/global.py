@@ -149,5 +149,12 @@ class GlobalChat(commands.Cog):
 
     await ctx.send(embed = embed, view = view)
 
+
+  @commands.command(brief = "rules")
+  async def rules(self, ctx):
+    await ctx.send("Please ask JDJG what the rules are.")
+
+    #move the rules into here.
+
 def setup(bot):
   bot.add_cog(GlobalChat(bot))
