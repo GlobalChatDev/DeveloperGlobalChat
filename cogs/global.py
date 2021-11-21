@@ -48,7 +48,7 @@ class GlobalChat(commands.Cog):
       if retry_after: 
         await asyncio.sleep(15.0)
 
-      #slows down spam, now it just well wait 15 minutes if cooldown is triggered.
+      #slows down spam, now it just well wait 15 seconds if cooldown is triggered.
       
       args = await self.message_converter(message)
 
