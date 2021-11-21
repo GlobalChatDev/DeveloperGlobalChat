@@ -1,11 +1,12 @@
 from discord.ext import commands
 import utils
-import discord, re, random
+import discord, re, random, asyncio
 from better_profanity import profanity
 
 class GlobalChat(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
+    self._cd = commands.CooldownMapping.from_cooldown(3.0, 15.0, commands.BucketType.user)
 
   async def cog_command_error(self, ctx, error):
     if ctx.command and not ctx.command.has_error_handler():
@@ -36,9 +37,18 @@ class GlobalChat(commands.Cog):
   @commands.Cog.listener()
   async def on_message(self, message):
     
-    #I need a way to figure out how to slow down messages, from spam or just block them, also find out how to edit edited messages or who deleted them to enable syncing.
+    #find out how to edit edited messages or who deleted them to enable syncing.
+
     ctx = await self.bot.get_context(message)
     if message.channel.id in self.bot.linked_channels and not message.author.bot and not ctx.valid and not ctx.prefix:
+
+      bucket = self._cd.get_bucket(message)
+      retry_after = bucket.update_rate_limit()
+
+      if retry_after: 
+        await asyncio.sleep(15.0)
+
+      #slows down spam, now it just well wait 15 minutes if cooldown is triggered.
       
       args = await self.message_converter(message)
 
