@@ -1,6 +1,6 @@
 from discord.ext import commands
 import utils
-import discord, re
+import discord, re, random
 from better_profanity import profanity
 
 class GlobalChat(commands.Cog):
@@ -131,6 +131,23 @@ class GlobalChat(commands.Cog):
     await self.bot.db.execute("DELETE FROM linked_chat WHERE server_id = $1", ctx.guild.id)
 
     await msg.edit("Unlinked channel....")
+
+  
+  @commands.command(brief = "gives you an invite to invite the bot", aliases = ["inv"])
+  async def invite(self, ctx):
+
+    minimial_invite = discord.utils.oauth_url(self.bot.user.id, permissions = discord.Permissions(permissions = 70635073))
+
+    embed = discord.Embed(title = "Invite link:", color = random.randint(0, 16777215))
+    embed.add_field(name = "Minimial permisions", value = f"{ minimial_invite}")
+
+    embed.set_thumbnail(url = self.bot.user.display_avatar.url)
+    embed.set_footer(text = f"not all features may work if you invite with minimal perms, if you invite with 0 make sure these permissions are in a Bots/Bot role.")
+
+    view = discord.ui.View()
+    view.add_item(discord.ui.Button(label = f"{self.bot.user.name}'s Minimial Permisions Invite", url = minimial_invite, style = discord.ButtonStyle.link))
+
+    await ctx.send(embed = embed, view = view)
 
 def setup(bot):
   bot.add_cog(GlobalChat(bot))
