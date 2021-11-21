@@ -36,7 +36,7 @@ class GlobalChat(commands.Cog):
   @commands.Cog.listener()
   async def on_message(self, message):
     
-    #I need a way to figure out how to slow down messages, from spam or just block them, also find out how to edit edited messages.
+    #I need a way to figure out how to slow down messages, from spam or just block them, also find out how to edit edited messages or who deleted them to enable syncing.
     ctx = await self.bot.get_context(message)
     if message.channel.id in self.bot.linked_channels and not message.author.bot and not ctx.valid and not ctx.prefix:
       

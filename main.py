@@ -22,7 +22,7 @@ class GlobalChatBot(commands.Bot):
     await self.db.close()
     await super().close()
 
-bot = GlobalChatBot(command_prefix = commands.when_mentioned_or("d!"), intents = discord.Intents.all(), owner_ids = [168422909482762240, 529499034495483926, 745058406083198994])
+bot = GlobalChatBot(command_prefix = commands.when_mentioned_or("d!"), intents = discord.Intents.all(), owner_ids = [168422909482762240, 529499034495483926, 745058406083198994], status = discord.Activity(type = discord.ActivityType.listening, name = f"I am making developer help across guilds possible."))
 
 for filename in os.listdir('./cogs'):
   if filename.endswith('.py'):
