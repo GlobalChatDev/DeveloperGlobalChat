@@ -78,6 +78,7 @@ class GlobalChat(commands.Cog):
   @commands.has_permissions(manage_messages = True)
   @commands.command(brief = "Adds yourself to the global chat with other developers", aliases = ["addlink"])
   async def add_link(self, ctx):
+    collection = self.bot.db['link']
 
     if not ctx.guild:
       return await ctx.send("this is not a guild appreantly, if it is report the problem to the developer thanks :D at JDJG Inc. Official#3493")
@@ -99,18 +100,33 @@ class GlobalChat(commands.Cog):
 
     await msg.edit("I can now link your channel. Linking....")
 
-    row = await self.bot.db.fetchrow("SELECT * FROM linked_chat WHERE server_id = $1", ctx.guild.id)
+    query = {
+      "server_id": ctx.guild.id
+    }
 
-    if row:
+    if collection.count_documents(query) != 0:
+      for data in collection.find(query):
+        if ctx.channel.id == data["linked_chat"]:
+          return await ctx.send("This channel is already linked.")
+          
       await ctx.send("you already linked a channel, we'll update it right now.")
 
-      await self.bot.db.execute("UPDATE linked_chat SET channel_id = $1 WHERE server_id = $2", ctx.channel.id, ctx.guild.id)
+      payload = {
+        "set": {
+          "server_id": ctx.guild.id,
+          "linked_chat": ctx.channel.id
+        }
+      }
 
-      self.bot.linked_channels.remove(row.get("channel_id"))
+      collection.update_one(query, payload)
 
-    if not row:
-      await self.bot.db.execute("INSERT INTO linked_chat values ($1, $2)", ctx.guild.id, ctx.channel.id)
-
+    else:
+      payload = {
+        "server_id": ctx.guild.id,
+        "linked_chat": ctx.channel.id
+      }
+      
+      collection.insert_one(payload)
     self.bot.linked_channels.append(ctx.channel.id)
     await msg.edit("Linked channel :D")
     
@@ -118,6 +134,7 @@ class GlobalChat(commands.Cog):
   @commands.has_permissions(manage_messages = True)
   @commands.command(brief = "Adds yourself to the global chat with other developers", aliases = ["removelink"])
   async def remove_link(self, ctx):
+    collection = self.bot.db['link']
 
     if not isinstance(ctx.channel, discord.TextChannel):
       return await ctx.send("you must use in a text channel")
@@ -136,16 +153,19 @@ class GlobalChat(commands.Cog):
 
     await msg.edit("I can now unlink your channel, unlinking....")
 
-    row = await self.bot.db.fetchrow("SELECT * FROM linked_chat WHERE server_id = $1", ctx.guild.id)
+    query = {
+      "server_id": ctx.guild.id
+    }
 
-    if not row:
-      await ctx.send("Can't unlink from a channel that doesn't exist.")
+    if collection.count_documents(query) == 0:
+      return await ctx.send("Can't unlink from a channel that doesn't exist.")
+    
+    for data in collection.find(query):
+      self.bot.linked_channels.remove(data['linked_chat'])
 
-    self.bot.linked_channels.remove(row.get("channel_id"))
+      collection.deletekno_one(query)
 
-    await self.bot.db.execute("DELETE FROM linked_chat WHERE server_id = $1", ctx.guild.id)
-
-    await msg.edit("Unlinked channel....")
+      await msg.edit("Unlinked channel....")
 
   
   @commands.command(brief = "gives you an invite to invite the bot", aliases = ["inv"])
