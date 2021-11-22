@@ -11,6 +11,7 @@ asyncpg = "^0.22.0"
 jishaku = {git = "https://github.com/Gorialis/jishaku.git"}
 "discord.py" = {git = "https://github.com/iDevision/enhanced-discord.py", branch = "2.0"}
 better-profanity = "^0.7.0"
+cool-utils = "^1.1.9"
 
 [tool.poetry.dev-dependencies]
 
