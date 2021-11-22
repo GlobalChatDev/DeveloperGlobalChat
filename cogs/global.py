@@ -2,6 +2,7 @@ from discord.ext import commands
 import utils
 import discord, re, random, asyncio
 from better_profanity import profanity
+import traceback
 
 class GlobalChat(commands.Cog):
   def __init__(self, bot):
@@ -23,10 +24,14 @@ class GlobalChat(commands.Cog):
     try:
       for x in re.findall(r'<@!?([0-9]{15,20})>', args):
         user = await self.bot.try_user(int(x))
-      args = args.replace(f"{re.match(rf'<@!?({x})>', args).group()}", f"@{user}")
+        
+        print(f"{re.match(rf'<@!?({x})>', args).group()}")
+
+        args = args.replace(f"{re.match(rf'<@!?({x})>', args).group()}", f"@{user}")
         #fix issue
 
     except Exception as e:
+      traceback.print_exc()
       print(f"error occured as {e}.")
 
     ctx = await self.bot.get_context(message)

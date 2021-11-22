@@ -1,6 +1,6 @@
 import discord, asyncpg
 from discord.ext import commands
-import asyncio, os
+import asyncio, os, traceback
 import B
 
 class GlobalChatBot(commands.Bot):
@@ -28,8 +28,8 @@ for filename in os.listdir('./cogs'):
   if filename.endswith('.py'):
     try:
       bot.load_extension(f'cogs.{filename[:-3]}')
-    except commands.errors.NoEntryPointError as e:
-      print(e)
+    except commands.errors.NoEntryPointError:
+      traceback.print_exc()
 
 B.b()
 bot.run(os.environ["TOKEN"])
