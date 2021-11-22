@@ -9,6 +9,10 @@ class GlobalChatBot(commands.AutoShardedBot):
 
   async def start(self, *args, **kwargs):
     self.db = MongoClient(os.getenv("DB_url"))['GlobalChat']
+    collection = self.db["all_links"]
+    for data in collection.find({"_id": "all"}):
+      for channel in data["links"]:
+        self.bot.linked_channels.append(channel)
     await super().start(*args, **kwargs)
 
   async def close(self):

@@ -108,6 +108,9 @@ class GlobalChat(commands.Cog):
       for data in collection.find(query):
         if ctx.channel.id == data["linked_chat"]:
           return await ctx.send("This channel is already linked.")
+
+        else:
+          self.bot.linked_channels.remove(data["linked_chat"])
           
       await ctx.send("you already linked a channel, we'll update it right now.")
 
@@ -119,6 +122,16 @@ class GlobalChat(commands.Cog):
       }
 
       collection.update_one(query, payload)
+      links = self.bot.db['all_links']
+      query = {
+        "_id": "all"
+      }
+      payload = {
+        "$addToSet": {
+          "links": ctx.channel.id
+        }
+      }
+      links.update_one(query, payload)
 
     else:
       payload = {
@@ -127,6 +140,16 @@ class GlobalChat(commands.Cog):
       }
       
       collection.insert_one(payload)
+      links = self.bot.db['all_links']
+      query = {
+        "_id": "all"
+      }
+      payload = {
+        "$addToSet": {
+          "links": ctx.channel.id
+        }
+      }
+      links.update_one(query, payload)
     self.bot.linked_channels.append(ctx.channel.id)
     await msg.edit("Linked channel :D")
     
@@ -163,7 +186,18 @@ class GlobalChat(commands.Cog):
     for data in collection.find(query):
       self.bot.linked_channels.remove(data['linked_chat'])
 
-      collection.deletekno_one(query)
+      collection.delete_one(query)
+
+      links = self.bot.db['all_links']
+      query = {
+        "_id": "all"
+      }
+      payload = {
+        "$pull": {
+          "links": ctx.channel.id
+        }
+      }
+      links.update_one(query, payload)
 
       await msg.edit("Unlinked channel....")
 
