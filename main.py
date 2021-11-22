@@ -1,4 +1,5 @@
 import discord, asyncpg
+from pymongo import MongoClient
 from discord.ext import commands
 import asyncio, os, traceback
 import B
