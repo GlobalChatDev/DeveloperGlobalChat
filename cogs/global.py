@@ -1,6 +1,7 @@
 from discord.ext import commands
 import utils
 import cool_utils
+from cool_utils import Mongo
 import discord, re, random, asyncio
 from better_profanity import profanity
 import traceback
@@ -80,7 +81,7 @@ class GlobalChat(commands.Cog):
   @commands.has_permissions(manage_messages = True)
   @commands.command(brief = "Adds yourself to the global chat with other developers", aliases = ["addlink"])
   async def add_link(self, ctx):
-    collection = self.bot.db['link']
+    Mongo.set_collection('link')
 
     if not ctx.guild:
       return await ctx.send("this is not a guild appreantly, if it is report the problem to the developer thanks :D at JDJG Inc. Official#3493")
@@ -106,7 +107,7 @@ class GlobalChat(commands.Cog):
       "server_id": ctx.guild.id
     }
 
-    if collection.count_documents(query) != 0:
+    if len(Mongo.find(query)) != 0:
       for data in collection.find(query):
         if ctx.channel.id == data["linked_chat"]:
           return await ctx.send("This channel is already linked.")
@@ -123,8 +124,8 @@ class GlobalChat(commands.Cog):
         }
       }
 
-      collection.update_one(query, payload)
-      links = self.bot.db['all_links']
+      await Mongo.update(query, payload)
+      await Mongo.set_collection('all_links')
       query = {
         "_id": "all"
       }
@@ -133,7 +134,7 @@ class GlobalChat(commands.Cog):
           "links": ctx.channel.id
         }
       }
-      links.update_one(query, payload)
+      await Mongo.update(query, payload)
 
     else:
       payload = {
@@ -141,8 +142,8 @@ class GlobalChat(commands.Cog):
         "linked_chat": ctx.channel.id
       }
       
-      collection.insert_one(payload)
-      links = self.bot.db['all_links']
+      await Mongo.insert(payload)
+      Mongo.set_collection('all_links')
       query = {
         "_id": "all"
       }
@@ -151,7 +152,7 @@ class GlobalChat(commands.Cog):
           "links": ctx.channel.id
         }
       }
-      links.update_one(query, payload)
+      await Mongo.update(query, payload)
     self.bot.linked_channels.append(ctx.channel.id)
     await msg.edit("Linked channel :D")
     
@@ -159,7 +160,7 @@ class GlobalChat(commands.Cog):
   @commands.has_permissions(manage_messages = True)
   @commands.command(brief = "Adds yourself to the global chat with other developers", aliases = ["removelink"])
   async def remove_link(self, ctx):
-    collection = self.bot.db['link']
+    Mongo.set_collection('link')
 
     if not isinstance(ctx.channel, discord.TextChannel):
       return await ctx.send("you must use in a text channel")
@@ -182,13 +183,13 @@ class GlobalChat(commands.Cog):
       "server_id": ctx.guild.id
     }
 
-    if collection.count_documents(query) == 0:
+    if len(Mongo.find(query)) == 0:
       return await ctx.send("Can't unlink from a channel that doesn't exist.")
     
     for data in collection.find(query):
       self.bot.linked_channels.remove(data['linked_chat'])
 
-      collection.delete_one(query)
+      await Mongo.delete(query)
 
       links = self.bot.db['all_links']
       query = {
@@ -199,7 +200,7 @@ class GlobalChat(commands.Cog):
           "links": ctx.channel.id
         }
       }
-      links.update_one(query, payload)
+      await Mongo.update(query, payload)
 
       await msg.edit("Unlinked channel....")
 

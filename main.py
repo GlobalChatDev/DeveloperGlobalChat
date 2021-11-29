@@ -1,5 +1,6 @@
 import discord, asyncpg
 from pymongo import MongoClient
+from cool_utils import Mongo
 from discord.ext import commands
 import asyncio, os, traceback
 import B
@@ -9,9 +10,9 @@ class GlobalChatBot(commands.AutoShardedBot):
     super().__init__(*args, **kwargs)
 
   async def start(self, *args, **kwargs):
-    self.db = MongoClient(os.getenv("DB_url"))['GlobalChat']
-    collection = self.db["all_links"]
-    for data in collection.find({"_id": "all"}):
+    Mongo.connect(os.getenv("DB_url"), "GlobalChat")
+    Mongo.set_collection("all_links")
+    for data in await Mongo.find_one({"_id": "all"}):
       for channel in data["links"]:
         self.bot.linked_channels.append(channel)
     await super().start(*args, **kwargs)
