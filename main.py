@@ -24,6 +24,14 @@ class GlobalChatBot(commands.Bot):
 
 bot = GlobalChatBot(command_prefix = commands.when_mentioned_or("d!"), intents = discord.Intents.all(), owner_ids = [168422909482762240, 529499034495483926, 745058406083198994], activity = discord.Activity(type = discord.ActivityType.listening, name = f"I am making developer help across guilds possible."))
 
+@bot.event
+async def on_error(event, *args, **kwargs):
+  more_information = os.sys.exc_info()
+  error_wanted=traceback.format_exc()
+  traceback.print_exc()
+    
+  #print(more_information[0])
+
 for filename in os.listdir('./cogs'):
   if filename.endswith('.py'):
     try:
