@@ -177,5 +177,12 @@ class GlobalChat(commands.Cog):
   async def credits(self, ctx):
     await ctx.send("DB provided by and ran by FrostiiWeeb#0400 \nAJTHATKID#0001 for his PFP \nJDJG Inc. Official#3493 as the owner and manager and programmer of the bot as well as FrostiiWeeb#0400 for also programming the bot. \nEndlessVortex#4547 and BenitzCoding#1317 Thank You!")
 
+  @commands.command(brief = "gives a link to the source")
+  async def source(self, ctx):
+    embed = discord.Embed(title = "Project at:\nhttps://github.com/GlobalChatDev/DeveloperGlobalChat !", description="you can also contact the owner if you want more info(by using the owner command) you can see who owns the bot. Please don't just copy the source code, cause this may cause issues with you or the user instead ask if you want to use my code or learn from my code and look to see if that's a valid command a.ka ask me first, then discord.py about the bot! Thanks :D", color = random.randint(0, 16777215))
+                   
+    embed.set_author(name = f"{self.bot.user}'s source code:", icon_url = self.bot.user.display_avatar.url)
+    await ctx.send(embed = embed)
+
 def setup(bot):
   bot.add_cog(GlobalChat(bot))
