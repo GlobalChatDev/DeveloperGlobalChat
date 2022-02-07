@@ -1,4 +1,0 @@
-run = "LD_PRELOAD=/usr/lib/libstderred.so python3 main.py"
-
-[packager]
-ignoredPackages=["discord"]
