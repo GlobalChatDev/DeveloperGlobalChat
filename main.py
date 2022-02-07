@@ -1,7 +1,9 @@
 import discord, asyncpg
 from discord.ext import commands
-import asyncio, os, traceback
+import asyncio, os, traceback, dotenv
 import B
+
+dotenv.load_dotenv()
 
 class GlobalChatBot(commands.Bot):
   def __init__(self, *args, **kwargs):
