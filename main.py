@@ -1,7 +1,6 @@
 import discord, asyncpg
 from discord.ext import commands
 import asyncio, os, traceback, dotenv
-import B
 
 dotenv.load_dotenv()
 
@@ -41,6 +40,6 @@ for filename in os.listdir('./cogs'):
     except commands.errors.NoEntryPointError:
       traceback.print_exc()
 
-B.b()
+
 bot.run(os.environ["TOKEN"])
 
