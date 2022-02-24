@@ -77,10 +77,10 @@ class GlobalChat(commands.Cog):
             continue
         
         if channel is None:
-          return print(c)
+          print(c)
         
-        print(f"SENT {c} : {channel}")
-        await channel.send(embed = embed)
+        if channel:
+          await channel.send(embed = embed)
 
   @commands.has_permissions(manage_messages = True)
   @commands.command(brief = "Adds yourself to the global chat with other developers", aliases = ["addlink"])
