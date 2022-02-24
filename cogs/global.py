@@ -75,6 +75,10 @@ class GlobalChat(commands.Cog):
         channel = self.bot.get_channel(c)
         if c == message.channel.id:
             continue
+        
+        if channel is None:
+          print(c)
+
         await channel.send(embed = embed)
 
   @commands.has_permissions(manage_messages = True)
