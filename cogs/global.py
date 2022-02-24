@@ -77,8 +77,8 @@ class GlobalChat(commands.Cog):
             continue
         
         if channel is None:
-          print(c)
-
+          return print(c)
+        
         await channel.send(embed = embed)
 
   @commands.has_permissions(manage_messages = True)
