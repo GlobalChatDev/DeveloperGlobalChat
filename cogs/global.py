@@ -79,6 +79,7 @@ class GlobalChat(commands.Cog):
         if channel is None:
           return print(c)
         
+        print(f"SENT {c} : {channel}")
         await channel.send(embed = embed)
 
   @commands.has_permissions(manage_messages = True)
