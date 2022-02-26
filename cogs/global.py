@@ -1,6 +1,6 @@
 from discord.ext import commands
 import utils
-import cool_utils
+#import cool_utils
 import discord, re, random, asyncio
 from better_profanity import profanity
 import traceback
@@ -38,7 +38,8 @@ class GlobalChat(commands.Cog):
     ctx = await self.bot.get_context(message)
     args = await commands.clean_content().convert(ctx, args)
     args = profanity.censor(args, censor_char = "#")
-    args = cool_utils.Links.censor(content=args, censor="#")
+    #args = cool_utils.Links.censor(content=args, censor="#")
+    #temp fix right now
     return args
 
   @commands.Cog.listener()
