@@ -3,6 +3,8 @@ import utils
 import discord, re, random, asyncio
 from utils import Censorship
 import traceback
+import cool_utils
+from better_profanity import profanity
 
 class GlobalChat(commands.Cog):
   def __init__(self, bot):
@@ -38,6 +40,9 @@ class GlobalChat(commands.Cog):
     args = await commands.clean_content(remove_markdown=True).convert(ctx, args)
     censoring = Censorship(args)
     args = censoring.censor()
+    args = profanity.censor(args, censor_char = "#")
+    args = cool_utils.Links.censor(content=args, censor="#")
+    #using this as a backup, cool_utils and the old better_profanity :)
     return args
 
   @commands.Cog.listener()
