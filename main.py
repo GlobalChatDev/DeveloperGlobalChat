@@ -36,6 +36,7 @@ bot = GlobalChatBot(
     ),
 )
 
+#if intents break, then re-apply them there and such, a.k.a make sure to add new intents to fix upcoming issues etc.
 
 @bot.event
 async def on_error(event, *args, **kwargs):
