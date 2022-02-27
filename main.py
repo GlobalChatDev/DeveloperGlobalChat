@@ -31,12 +31,9 @@ async def on_error(event, *args, **kwargs):
   error_wanted=traceback.format_exc()
   traceback.print_exc()
 
-for filename in os.listdir('./cogs'):
-  if filename.endswith('.py'):
-    try:
-      bot.load_extension(f'cogs.{filename[:-3]}')
-    except commands.errors.NoEntryPointError:
-      traceback.print_exc()
+extensions = [ext.rstrip(".py") for ext in os.listdir("./cogs") if os.path.isfile(f"cogs/{ext}")]
+for cog in extensions:
+  bot.load_extension(f"cogs.{cog}")
 
 bot.run(os.environ["TOKEN"])
 
