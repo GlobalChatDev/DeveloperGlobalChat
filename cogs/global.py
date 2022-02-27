@@ -184,15 +184,15 @@ class GlobalChat(commands.Cog):
     rules = ["No swearing. Keep it family friendly.", "No NSFW - Same thing, keep it family friendly."]
     content = """"""
     for index, value in enumerate(rules):
-      content += f"\n{index}: {value}"
+      content += f"{index}: {value}\n"
     return await ctx.reply(content)
 
   @commands.command()
   async def credits(self, ctx):
-    crediting = ["Database provided by and ran by FrostiiWeeb#8373 and programming the bot.", "AJTHATKID#0001 for providing the bot's profile picture.", "JDJG Inc. Official#3943 for the creator of this project and programming the bot.", "Thank you for the support and endless help, EndlessVortex#4547 and BenitzCoding#1317."]
+    crediting = ["Database provided by and ran by FrostiiWeeb#8373 - They also programmed the basis of the bot.", "AJTHATKID#0001 for providing the bot's profile picture.", "JDJG Inc. Official#3943 for the creator of this project and programming the bot.", "Thank you for the support and endless help, EndlessVortex#4547 and BenitzCoding#1317."]
     content = """"""
     for index, value in enumerate(crediting):
-      content += f"{index}: {value}"
+      content += f"{index}: {value}\n"
     return await ctx.reply(content)
 
   @commands.command(brief = "Source code.")
