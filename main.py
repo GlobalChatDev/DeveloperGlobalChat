@@ -33,7 +33,7 @@ async def on_error(event, *args, **kwargs):
 
 extensions = [ext.rstrip(".py") for ext in os.listdir("./cogs")]
 for cog in extensions:
-  bot.load_extension(cog)
+  bot.load_extension(f"cogs.{cog}")
 
 bot.run(os.environ["TOKEN"])
 
