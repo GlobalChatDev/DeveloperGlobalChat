@@ -39,11 +39,11 @@ class GlobalChat(commands.Cog):
     ctx = await self.bot.get_context(message)
     args = await commands.clean_content(remove_markdown=True).convert(ctx, args)
     censoring = Censorship(args)
-    args = censoring.censor()
-    args = profanity.censor(args, censor_char = "#")
+    args_censored = censoring.censor()
+    args = profanity.censor(args_censored, censor_char = "#")
     args = cool_utils.Links.censor(content=args, censor="#")
     #using this as a backup, cool_utils and the old better_profanity :)
-    return args
+    return args_censored
 
   @commands.Cog.listener()
   async def on_message(self, message):
