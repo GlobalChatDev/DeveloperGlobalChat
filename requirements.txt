@@ -4,3 +4,4 @@ git+https://github.com/Gorialis/jishaku.git
 git+https://github.com/iDevision/enhanced-discord.py@2.0
 better-profanity
 python-dotenv
+cool-utils
