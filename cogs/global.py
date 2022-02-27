@@ -110,12 +110,12 @@ class GlobalChat(commands.Cog):
 
     await msg.edit("I can now link your channel. Linking....")
 
-    row = await self.bot.db.fetchrow("SELECT * FROM linked_chat WHERE server_id = $1", ctx.guild.id)
+    row = await self.bot.db.fetchrow("SELECT * FROM linked_chat WHERE guild_id = $1", ctx.guild.id)
 
     if row:
       await ctx.send("You already linked a channel, we'll update it right now.")
 
-      await self.bot.db.execute("UPDATE linked_chat SET channel_id = $1 WHERE server_id = $2", ctx.channel.id, ctx.guild.id)
+      await self.bot.db.execute("UPDATE linked_chat SET channel_id = $1 WHERE guild_id = $2", ctx.channel.id, ctx.guild.id)
 
       self.bot.linked_channels.remove(row.get("channel_id"))
 
