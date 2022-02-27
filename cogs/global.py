@@ -2,7 +2,7 @@ from discord.ext import commands
 import utils
 import cool_utils
 import discord, re, random, asyncio
-from better_profanity import profanity
+from utils import Censorship
 import traceback
 
 class GlobalChat(commands.Cog):
@@ -36,8 +36,9 @@ class GlobalChat(commands.Cog):
       print(f"error occured as {e}.")
 
     ctx = await self.bot.get_context(message)
-    args = await commands.clean_content().convert(ctx, args)
-    args = profanity.censor(args, censor_char = "#")
+    args = await commands.clean_content(remove_markdown=True).convert(ctx, args)
+    censoring = Censorship(args)
+    args = censoring.censor()
     args = cool_utils.Links.censor(content=args, censor="#")
     return args
 
@@ -60,9 +61,9 @@ class GlobalChat(commands.Cog):
       args = await self.message_converter(message)
 
       if len(args) >= 6000:
-        args = "Message Too Big, Author will be notifited"
+        args = "TooBig: the content specified is too large to send."
         
-        await ctx.send(f"{ctx.author.mention}, please use content less than 6000, either using a pastebin or something else, thanks")
+        await ctx.send(f"Hey! Please use content less than 6000 characters, either using a pastebin or something else, thanks")
 
       embed = discord.Embed(title = f"{message.guild}",
       description = f"{args}", color = 15428885, timestamp = message.created_at)
@@ -82,10 +83,10 @@ class GlobalChat(commands.Cog):
   async def add_link(self, ctx):
 
     if not ctx.guild:
-      return await ctx.send("this is not a guild appreantly, if it is report the problem to the developer thanks :D at JDJG Inc. Official#3493")
+      return await ctx.send("There is no guild found, if this seems like an error, report the problem to the developer at `JDJG Inc. Official#3493`.  Thank you.")
 
     if not isinstance(ctx.channel, discord.TextChannel):
-      return await ctx.send("you must use in a textchannel")
+      return await ctx.send("Must be in a text channel.")
 
     view = utils.BasicButtons(ctx, timeout = 30.0)
 
@@ -94,7 +95,7 @@ class GlobalChat(commands.Cog):
     await view.wait()
 
     if view.value is None:
-      return await msg.edit("you didn't respond quickly enough")
+      return await msg.edit("Too slow, be quicker!")
 
     if not view.value:
       return await msg.edit("Not linking your channel to the global chat.")
@@ -104,7 +105,7 @@ class GlobalChat(commands.Cog):
     row = await self.bot.db.fetchrow("SELECT * FROM linked_chat WHERE server_id = $1", ctx.guild.id)
 
     if row:
-      await ctx.send("you already linked a channel, we'll update it right now.")
+      await ctx.send("You already linked a channel, we'll update it right now.")
 
       await self.bot.db.execute("UPDATE linked_chat SET channel_id = $1 WHERE server_id = $2", ctx.channel.id, ctx.guild.id)
 
@@ -114,15 +115,15 @@ class GlobalChat(commands.Cog):
       await self.bot.db.execute("INSERT INTO linked_chat values ($1, $2)", ctx.guild.id, ctx.channel.id)
 
     self.bot.linked_channels.append(ctx.channel.id)
-    await msg.edit("Linked channel :D")
+    await msg.edit("**`Locked and loaded`**. The channel has been linked.")
     
 
   @commands.has_permissions(manage_messages = True)
-  @commands.command(brief = "Adds yourself to the global chat with other developers", aliases = ["removelink"])
+  @commands.command(brief = "Removes the current channel's link.", aliases = ["removelink"])
   async def remove_link(self, ctx):
 
     if not isinstance(ctx.channel, discord.TextChannel):
-      return await ctx.send("you must use in a text channel")
+      return await ctx.send("Must be in a text channel.")
 
     view = utils.BasicButtons(ctx, timeout = 30.0)
 
@@ -131,7 +132,7 @@ class GlobalChat(commands.Cog):
     await view.wait()
 
     if view.value is None:
-      return await msg.edit("you didn't respond quickly enough")
+      return await msg.edit("Too slow! Be quicker!")
 
     if not view.value:
       return await msg.edit("Not unlinking your channel to the global chat.")
@@ -147,40 +148,48 @@ class GlobalChat(commands.Cog):
 
     await self.bot.db.execute("DELETE FROM linked_chat WHERE server_id = $1", ctx.guild.id)
 
-    await msg.edit("Unlinked channel....")
+    await msg.edit("**`Locked and loaded`** The link has been removed.")
 
   
-  @commands.command(brief = "gives you an invite to invite the bot", aliases = ["inv"])
+  @commands.command(brief = "Invite the bot!", aliases = ["inv"])
   async def invite(self, ctx):
 
-    minimial_invite = discord.utils.oauth_url(self.bot.user.id, permissions = discord.Permissions(permissions = 70635073))
+    minimial_invite = discord.utils.oauth_url(self.bot.user.id, permissions = discord.Permissions(70635073))
+    moderate_invite = discord.utils.oauth_url(self.bot.user.id, permissions = discord.Permissions(8))
 
     embed = discord.Embed(title = "Invite link:", color = random.randint(0, 16777215))
-    embed.add_field(name = "Minimial permisions", value = f"{ minimial_invite}")
+    embed.add_field(name = "Minimial permisions", value = f"{minimial_invite}")
+    embed.add_field(name="Moderate Invite:", value=moderate_invite)
 
     embed.set_thumbnail(url = self.bot.user.display_avatar.url)
-    embed.set_footer(text = f"not all features may work if you invite with minimal perms, if you invite with 0 make sure these permissions are in a Bots/Bot role.")
+    embed.set_footer(text = f"Not all features may work if you invite with minimal perms, if you invite with 0 make sure these permissions are in a Bots/Bot role.")
 
     view = discord.ui.View()
     view.add_item(discord.ui.Button(label = f"{self.bot.user.name}'s Minimial Permisions Invite", url = minimial_invite, style = discord.ButtonStyle.link))
+    view.add_item(discord.ui.Button(label = f"{self.bot.user.name}'s Moderate Permisions Invite", url = moderate_invite, style = discord.ButtonStyle.link))
 
     await ctx.send(embed = embed, view = view)
 
 
   @commands.command(brief = "rules")
   async def rules(self, ctx):
-    await ctx.send("Please ask JDJG what the rules are.")
-
-    #move the rules into here.
+    rules = ["No swearing. Keep it family friendly.", "No NSFW - Same thing, keep it family friendly."]
+    content = """"""
+    for index, value in enumerate(rules):
+      content += f"\n{index}: {value}"
+    return await ctx.reply(content)
 
   @commands.command()
   async def credits(self, ctx):
-    await ctx.send("DB provided by and ran by FrostiiWeeb#0400 \nAJTHATKID#0001 for his PFP \nJDJG Inc. Official#3493 as the owner and manager and programmer of the bot as well as FrostiiWeeb#0400 for also programming the bot. \nEndlessVortex#4547 and BenitzCoding#1317 Thank You!")
+    crediting = ["Database provided by and ran by FrostiiWeeb#8373 and programming the bot.", "AJTHATKID#0001 for providing the bot's profile picture.", "JDJG Inc. Official#3943 for the creator of this project and programming the bot.", "Thank you for the support and endless help, EndlessVortex#4547 and BenitzCoding#1317."]
+    content = """"""
+    for index, value in enumerate(crediting):
+      content += f"{index}: {value}"
+    return await ctx.reply(content)
 
-  @commands.command(brief = "gives a link to the source")
+  @commands.command(brief = "Source code.")
   async def source(self, ctx):
-    embed = discord.Embed(title = "Project at:\nhttps://github.com/GlobalChatDev/DeveloperGlobalChat !", description="you can also contact the owner if you want more info(by using the owner command) you can see who owns the bot. Please don't just copy the source code, cause this may cause issues with you or the user instead ask if you want to use my code or learn from my code and look to see if that's a valid command a.ka ask me first, then discord.py about the bot! Thanks :D", color = random.randint(0, 16777215))
-                   
+    embed = discord.Embed(title = "Project at:\nhttps://github.com/GlobalChatDev/DeveloperGlobalChat !", description="We have the MIT License for the project, you may not steal code. Just make it yourself or ask how we do it. Thank you!", color = random.randint(0, 16777215))        
     embed.set_author(name = f"{self.bot.user}'s source code:", icon_url = self.bot.user.display_avatar.url)
     await ctx.send(embed = embed)
 

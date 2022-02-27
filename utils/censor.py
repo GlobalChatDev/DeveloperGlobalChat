@@ -1,5 +1,3 @@
-import discord
-import asyncio
 from typing import *
 
 class Censorship:
@@ -18,3 +16,4 @@ class Censorship:
 				for _ in range(lenned):
 					hashes += "#"
 				self.content = self.content.replace(censor, hashes)
+		return self.content
