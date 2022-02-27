@@ -28,7 +28,7 @@ class Events(commands.Cog):
     embed.add_field(name='Member Count:',value=f'{guild.member_count}')
     embed.add_field(name = 'Amount of Channels:', value=f"{len(channels)}")
     embed.add_field(name = 'Amount of Roles:',value=f"{len(roles)}")
-    await self.bot.fetch_channel(852897595869233182).send(embed=embed)
+    await self.bot.try_channel(852897595869233182).send(embed=embed)
 
   @commands.Cog.listener()
   async def on_guild_remove(self, guild):
@@ -56,7 +56,7 @@ class Events(commands.Cog):
       pass
     embed.add_field(name='Amount of Channels:',value=f"{len(channels)}")
     embed.add_field(name = 'Amount of Roles:',value=f"{len(roles)}")
-    await self.bot.fetch_channel(852897595869233182).send(embed=embed)
+    await self.bot.try_channel(852897595869233182).send(embed=embed)
 
 def setup(bot):
   bot.add_cog(Events(bot))

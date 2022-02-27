@@ -23,7 +23,7 @@ class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
 
     arg_dict = get_var_dict_from_ctx(ctx, '')
     arg_dict.update(get_var_dict_from_ctx(ctx, '_'))
-    arg_dict["owners"] = {await ctx.bot.fetch_user(oid) for oid in ctx.bot.owner_ids}
+    arg_dict["owners"] = {await ctx.bot.try_user(oid) for oid in ctx.bot.owner_ids}
     arg_dict["_"] = self.last_result
 
     scope = self.scope

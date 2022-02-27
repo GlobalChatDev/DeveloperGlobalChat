@@ -9,7 +9,7 @@ class GlobalChatBot(commands.Bot):
     super().__init__(*args, **kwargs)
 
   async def start(self, *args, **kwargs):
-    self.db = asyncpg.create_pool(os.getenv("DB_key"))
+    self.db = await asyncpg.create_pool(os.getenv("DB_key"))
 
     self.linked_data = await self.db.fetch("SELECT * FROM linked_chat")
     self.linked_channels = [c.get("channel_id") for c in self.linked_data]
@@ -31,7 +31,7 @@ async def on_error(event, *args, **kwargs):
   error_wanted=traceback.format_exc()
   traceback.print_exc()
 
-extensions = ["cogs.global", "cogs.jsk", "cogs.listeners"]
+extensions = [ext.rstrip(".py") for ext in os.listdir("./cogs")]
 for cog in extensions:
   bot.load_extension(cog)
 

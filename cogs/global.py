@@ -1,6 +1,5 @@
 from discord.ext import commands
 import utils
-import cool_utils
 import discord, re, random, asyncio
 from utils import Censorship
 import traceback
@@ -39,8 +38,6 @@ class GlobalChat(commands.Cog):
     args = await commands.clean_content(remove_markdown=True).convert(ctx, args)
     censoring = Censorship(args)
     args = censoring.censor()
-    args = cool_utils.Links.censor(content=args, censor="#")
-    #will be changed to use a buitl in links censor, Frostii shouldn't attempt to update the wonder better_profanity :)
     return args
 
   @commands.Cog.listener()
@@ -74,7 +71,7 @@ class GlobalChat(commands.Cog):
       if message.guild: embed.set_thumbnail(url = message.guild.icon.url if message.guild.icon else "https://i.imgur.com/3ZUrjUP.png")
 
       for c in self.bot.linked_channels:
-        channel = self.bot.get_channel(c)
+        channel = await self.bot.try_channel(c)
         if c == message.channel.id:
             continue
         
