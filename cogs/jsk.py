@@ -6,6 +6,7 @@ from jishaku.codeblocks import codeblock_converter
 from jishaku.exception_handling import ReplResponseReactor
 from jishaku.repl import AsyncCodeExecutor, get_var_dict_from_ctx
 from jishaku.functools import AsyncSender
+import traceback
 
 #look into making more jishaku commands: https://jishaku.readthedocs.io/en/latest/cog.html
 
@@ -13,7 +14,6 @@ class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
   async def cog_command_error(self, ctx, error):
     if ctx.command and not ctx.command.has_error_handler():
       await ctx.send(error)
-      import traceback
       traceback.print_exc()
       
     #I need to fix all cog_command_error
@@ -23,6 +23,7 @@ class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
 
     arg_dict = get_var_dict_from_ctx(ctx, '')
     arg_dict.update(get_var_dict_from_ctx(ctx, '_'))
+    arg_dict["owners"] = {await ctx.bot.fetch_user(oid) for oid in ctx.bot.owner_ids}
     arg_dict["_"] = self.last_result
 
     scope = self.scope
