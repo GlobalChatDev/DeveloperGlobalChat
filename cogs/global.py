@@ -147,14 +147,14 @@ class GlobalChat(commands.Cog):
 
     await msg.edit("I can now unlink your channel, unlinking....")
 
-    row = await self.bot.db.fetchrow("SELECT * FROM linked_chat WHERE server_id = $1", ctx.guild.id)
+    row = await self.bot.db.fetchrow("SELECT * FROM linked_chat WHERE guild_id = $1", ctx.guild.id)
 
     if not row:
       await ctx.send("Can't unlink from a channel that doesn't exist.")
 
     self.bot.linked_channels.remove(row.get("channel_id"))
 
-    await self.bot.db.execute("DELETE FROM linked_chat WHERE server_id = $1", ctx.guild.id)
+    await self.bot.db.execute("DELETE FROM linked_chat WHERE guild_id = $1", ctx.guild.id)
 
     await msg.edit("**`Locked and loaded`** The link has been removed.")
 
