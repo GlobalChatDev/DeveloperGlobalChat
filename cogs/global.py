@@ -76,7 +76,8 @@ class GlobalChat(commands.Cog):
       if message.guild: embed.set_thumbnail(url = message.guild.icon.url if message.guild.icon else "https://i.imgur.com/3ZUrjUP.png")
 
       for c in self.bot.linked_channels:
-        channel = await self.bot.try_channel(c)
+        channel = self.bot.get_channel(c)
+        #frostii you can make your own method if you want for try_channel, maybe put it in a log or something, if the channel is None, so we can remove the link?
         if c == message.channel.id:
             continue
         
