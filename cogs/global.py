@@ -241,9 +241,7 @@ class GlobalChat(commands.Cog):
 
     @commands.command(brief="Suggest something.")
     async def suggest(self, ctx: commands.Context, *, content: str):
-        embed = discord.Embed(
-          title="Suggestion"  
-        )
+        embed = discord.Embed(title="Suggestion")
         embed.description = content
         await self.bot.fetch_channel(947604940774309889).send(embed=embed)
         return await ctx.send(embed=embed)
