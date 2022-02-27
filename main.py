@@ -1,6 +1,7 @@
-import discord, asyncpg
+import asyncpg, sys, os, traceback, dotenv
+
+import discord,
 from discord.ext import commands
-import asyncio, os, traceback, dotenv
 
 dotenv.load_dotenv()
 
@@ -27,7 +28,7 @@ class GlobalChatBot(commands.Bot):
 
 bot = GlobalChatBot(
     command_prefix=commands.when_mentioned_or("d!"),
-    intents=discord.Intents.all(),
+    intents=discord.Intents(guild_messages=True, guilds=True, members=True),
     owner_ids=[168422909482762240, 529499034495483926, 745058406083198994, 746807014658801704],
     activity=discord.Activity(
         type=discord.ActivityType.listening, name=f"I am making developer help across guilds possible."
@@ -37,7 +38,7 @@ bot = GlobalChatBot(
 
 @bot.event
 async def on_error(event, *args, **kwargs):
-    more_information = os.sys.exc_info()
+    more_information = sys.exc_info()
     error_wanted = traceback.format_exc()
     traceback.print_exc()
 
