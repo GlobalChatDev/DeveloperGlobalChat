@@ -1,6 +1,7 @@
+from pyexpat.errors import messages
 import asyncpg, sys, os, traceback, dotenv
 
-import discord,
+import discord
 from discord.ext import commands
 
 dotenv.load_dotenv()
@@ -28,7 +29,7 @@ class GlobalChatBot(commands.Bot):
 
 bot = GlobalChatBot(
     command_prefix=commands.when_mentioned_or("d!"),
-    intents=discord.Intents(guild_messages=True, guilds=True, members=True),
+    intents=discord.Intents(messages=True, guilds=True, members=True, webhooks=True, emojis=True),
     owner_ids=[168422909482762240, 529499034495483926, 745058406083198994, 746807014658801704],
     activity=discord.Activity(
         type=discord.ActivityType.listening, name=f"I am making developer help across guilds possible."

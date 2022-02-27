@@ -199,7 +199,7 @@ class GlobalChat(commands.Cog):
         minimial_invite = discord.utils.oauth_url(self.bot.user.id, permissions=discord.Permissions(70635073))
         moderate_invite = discord.utils.oauth_url(self.bot.user.id, permissions=discord.Permissions(8))
 
-        embed = discord.Embed(title="Invite link:", color=discord.Color.random())
+        embed = discord.Embed(title="Invite link:", color=random.randint(0, 16777215))
         embed.add_field(name="Minimial permisions", value=minimial_invite)
         embed.add_field(name="Moderate Invite:", value=moderate_invite)
 
@@ -245,7 +245,7 @@ class GlobalChat(commands.Cog):
         embed = discord.Embed(
             title="Project at:\nhttps://github.com/GlobalChatDev/DeveloperGlobalChat !",
             description="We have the MIT License for the project, you may not steal code. Just make it yourself or ask how we do it. Thank you!",
-            color=discord.Color.random(),
+            color=random.randint(0, 16777215),
         )
         embed.set_author(name=f"{self.bot.user}'s source code:", icon_url=self.bot.user.display_avatar.url)
         await ctx.send(embed=embed)

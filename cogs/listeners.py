@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+import random
 
 import discord
 from discord.ext import commands
@@ -21,7 +22,7 @@ class Events(commands.Cog):
     async def on_guild_join(self, guild: discord.Guild):
         channels = [channel for channel in guild.channels]
         roles = roles = [role for role in guild.roles]
-        embed = discord.Embed(title=f"Bot just joined  {guild.name}", color=discord.Color.random())
+        embed = discord.Embed(title=f"Bot just joined  {guild.name}", color=random.randint(0, 16777215))
 
         embed.set_thumbnail(url=str(guild.icon or "https://i.imgur.com/3ZUrjUP.png"))
 
@@ -42,7 +43,7 @@ class Events(commands.Cog):
     async def on_guild_remove(self, guild: discord.Guild):
         channels = [channel for channel in guild.channels]
         roles = roles = [role for role in guild.roles]
-        embed = discord.Embed(title=f"Bot just left : {guild.name}", color=discord.Color.random())
+        embed = discord.Embed(title=f"Bot just left : {guild.name}", color=random.randint(0, 16777215))
 
         embed.set_thumbnail(url=str(guild.icon or "https://i.imgur.com/3ZUrjUP.png"))
 
