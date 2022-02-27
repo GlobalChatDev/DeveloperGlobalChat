@@ -1,10 +1,17 @@
+from typing import TYPE_CHECKING
+
 import discord
 from discord.ext import commands
 
+if TYPE_CHECKING:
+    from main import GlobalChatBot
+else:
+    GlobalChatBot = commands.Bot
+
 
 class Events(commands.Cog):
-    def __init__(self, bot):
-        self.bot: commands.Bot = bot
+    def __init__(self, bot: GlobalChatBot):
+        self.bot: GlobalChatBot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):

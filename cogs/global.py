@@ -18,10 +18,14 @@ if TYPE_CHECKING:
     from discord import Message
     from discord.ext.commands import Context, CommandError
 
+    from main import GlobalChatBot
+else:
+    GlobalChatBot = commands.Bot
+
 
 class GlobalChat(commands.Cog):
-    def __init__(self, bot) -> None:
-        self.bot = bot
+    def __init__(self, bot: GlobalChatBot) -> None:
+        self.bot: GlobalChatBot = bot
         self._cd = commands.CooldownMapping.from_cooldown(3.0, 15.0, commands.BucketType.user)
 
     async def cog_command_error(self, ctx: Context, error: CommandError) -> None:
