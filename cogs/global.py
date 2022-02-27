@@ -40,6 +40,7 @@ class GlobalChat(commands.Cog):
     censoring = Censorship(args)
     args = censoring.censor()
     args = cool_utils.Links.censor(content=args, censor="#")
+    #will be changed to use a buitl in links censor, Frostii shouldn't attempt to update the wonder better_profanity :)
     return args
 
   @commands.Cog.listener()
@@ -76,7 +77,12 @@ class GlobalChat(commands.Cog):
         channel = self.bot.get_channel(c)
         if c == message.channel.id:
             continue
-        await channel.send(embed = embed)
+        
+        if channel is None:
+          print(c)
+        
+        if channel:
+          await channel.send(embed = embed)
 
   @commands.has_permissions(manage_messages = True)
   @commands.command(brief = "Adds yourself to the global chat with other developers", aliases = ["addlink"])

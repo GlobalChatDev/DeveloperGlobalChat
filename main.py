@@ -1,7 +1,6 @@
 import discord, asyncpg
 from discord.ext import commands
 import asyncio, os, traceback, dotenv
-import B
 
 dotenv.load_dotenv()
 
@@ -36,6 +35,5 @@ extensions = ["cogs.global", "cogs.jsk", "cogs.listeners"]
 for cog in extensions:
   bot.load_extension(cog)
 
-B.b()
 bot.run(os.environ["TOKEN"])
 
