@@ -36,23 +36,7 @@ class GlobalChat(commands.Cog):
         # I need to fix all cog_command_error
 
     async def message_converter(self, message: Message) -> str:
-        message_content = message.content
-        message_content = message_content or "Test Content"
-
-        try:
-            for x in findall(r"<@!?([0-9]{15,20})>", message_content):
-                user = await self.bot.try_user(int(x))
-
-                print(f"{match(rf'<@!?({x})>', message_content).group()}")  # type: ignore
-
-                message_content = message_content.replace(
-                    f"{match(rf'<@!?({x})>', message_content).group()}", f"@{user}"  # type: ignore
-                )
-                # fix issue
-
-        except Exception as e:
-            traceback.print_exc()
-            print(f"error occured as {e}.")
+        message_content = message.content or "Test Content"
 
         message_content = escape_markdown(message_content)
         censoring = Censorship(message_content)
