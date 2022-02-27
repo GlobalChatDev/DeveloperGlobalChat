@@ -239,6 +239,15 @@ class GlobalChat(commands.Cog):
         embed.set_author(name=f"{self.bot.user}'s source code:", icon_url=self.bot.user.display_avatar.url)
         await ctx.send(embed=embed)
 
+    @commands.command(brief="Suggest something.")
+    async def suggest(self, ctx: commands.Context, *, content: str):
+        embed = discord.Embed(
+          title="Suggestion"  
+        )
+        embed.description = content
+        await self.bot.fetch_channel(947604940774309889).send(embed=embed)
+        return await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(GlobalChat(bot))
