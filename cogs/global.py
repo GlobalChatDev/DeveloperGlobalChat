@@ -9,7 +9,7 @@ from better_profanity import profanity
 
 class GlobalChat(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
+        self.bot: commands.Bot = bot
         self._cd = commands.CooldownMapping.from_cooldown(3.0, 15.0, commands.BucketType.user)
 
     async def cog_command_error(self, ctx, error):
@@ -243,7 +243,7 @@ class GlobalChat(commands.Cog):
     async def suggest(self, ctx: commands.Context, *, content: str):
         embed = discord.Embed(title="Suggestion")
         embed.description = content
-        await self.bot.fetch_channel(947604940774309889).send(embed=embed)
+        await (await self.bot.fetch_channel(947604940774309889)).send(embed=embed)
         return await ctx.send(embed=embed)
 
 
