@@ -413,7 +413,7 @@ class Owner(commands.Cog, command_attrs=dict(hidden=True)):
         return await ctx.send(f"Blacklisted user `{user}`."), await self.log_channel.send(f"Blacklisted user `{user}`.")
 
     @blacklist.command(brief="Add someone to the guild blacklist.", name="guild", hidden=False)
-    @commands.has_permissions(manage_server=True)
+    @commands.has_permissions(administrator=True)
     async def guild_(self, ctx: commands.Context, user: typing.Union[discord.User, discord.Member, int], reason: str):
         if await self.bot.get_guild_blacklist(ctx.guild.id, user.id):
             return await ctx.send("That user is already blacklisted in this guild.")
