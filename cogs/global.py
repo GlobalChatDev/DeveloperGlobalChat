@@ -112,7 +112,7 @@ class GlobalChat(commands.Cog):
                     if not dont_send:
                         await channel.send(embed=embed)
                     else:
-                        pass
+                        await ctx.reply("Blacklisted in some guild, can't send.")
 
     @commands.has_permissions(manage_messages=True)
     @commands.command(brief="Adds yourself to the global chat with other developers", aliases=["addlink"])

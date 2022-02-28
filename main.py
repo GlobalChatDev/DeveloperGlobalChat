@@ -10,10 +10,10 @@ class GlobalChatBot(commands.Bot):
         super().__init__(*args, **kwargs)
 
     async def get_global_blacklist(self, user_id: int):
-        return await self.db.fetch("SELECT * FROM global_ban WHERE user_id = $1", user_id)
+        return await self.db.fetchrow("SELECT * FROM global_ban WHERE user_id = $1", user_id)
 
     async def get_guild_blacklist(self, guild_id: int, user_id: int):
-        return await self.db.fetch("SELECT * FROM guild_ban WHERE user_id = $1 AND guild_id = $2", user_id, guild_id)
+        return await self.db.fetchrow("SELECT * FROM guild_ban WHERE user_id = $1 AND guild_id = $2", user_id, guild_id)
 
     async def start(self, *args, **kwargs):
         self.db = await asyncpg.create_pool(os.getenv("DB_key"))
