@@ -400,7 +400,7 @@ class Owner(commands.Cog):
             ),
         )
 
-    @commands.group(brief="Group for blacklist commands.Chat")
+    @commands.group(brief="Group for blacklist commands.", invoke_without_command=True)
     async def blacklist(self, ctx: commands.Context):
         return await ctx.send_help(ctx.command)
 
