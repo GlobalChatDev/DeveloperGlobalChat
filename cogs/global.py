@@ -48,7 +48,7 @@ class GlobalChat(commands.Cog):
         return args_censored
 
     @commands.Cog.listener()
-    async def on_message(self, message):
+    async def on_message(self, message: discord.Message):
 
         # find out how to edit edited messages or who deleted them to enable syncing.
 
@@ -87,9 +87,17 @@ class GlobalChat(commands.Cog):
                 embed.set_thumbnail(
                     url=message.guild.icon.url if message.guild.icon else "https://i.imgur.com/3ZUrjUP.png"
                 )
+            thing = await self.bot.get_global_blacklist(message.author.id)
+            if thing:
+                return await ctx.reply(
+                    embed=discord.Embed(
+                        title="Blacklisted",
+                        description=f"You were globally blacklisted for {thing['reason']}. Please appeal by contacting the developers.",
+                    )
+                )
 
             for c in self.bot.linked_channels:
-                channel = self.bot.get_channel(c)
+                channel = await self.bot.fetch_channel(c)
                 # frostii you can make your own method if you want for try_channel, maybe put it in a log or something, if the channel is None, so we can remove the link?
                 if c == message.channel.id:
                     continue
@@ -98,7 +106,13 @@ class GlobalChat(commands.Cog):
                     print(c)
 
                 if channel:
-                    await channel.send(embed=embed)
+                    thing = await self.bot.get_guild_blacklist(channel.guild.id, message.author.id)
+                    if thing:
+                        dont_send = True
+                    if not dont_send:
+                        await channel.send(embed=embed)
+                    else:
+                        pass
 
     @commands.has_permissions(manage_messages=True)
     @commands.command(brief="Adds yourself to the global chat with other developers", aliases=["addlink"])
@@ -219,8 +233,8 @@ class GlobalChat(commands.Cog):
     @commands.command()
     async def credits(self, ctx):
         crediting = [
-            "Database provided by and ran by FrostiiWeeb#8373 - They also programmed the basis of the bot.",
-            "AJTHATKID#0001 for providing the bot's profile picture.",
+            "Hosting provided by FrostiiWeeb#8373 - They also provided the current profile picture.",
+            "AJTHATKID#0001 for providing the bot's old profile picture.",
             "JDJG Inc. Official#3943 for the creator of this project and programming the bot.",
             "Thank you for the support and endless help, EndlessVortex#4547 and BenitzCoding#1317.",
         ]
@@ -243,6 +257,7 @@ class GlobalChat(commands.Cog):
     async def suggest(self, ctx: commands.Context, *, content: str):
         embed = discord.Embed(title="Suggestion")
         embed.description = content
+        embed.set_footer(icon_url=ctx.author.avatar.url, text=f"Ran by {str(ctx.author)}")
         await (await self.bot.fetch_channel(947604940774309889)).send(embed=embed)
         return await ctx.send(embed=embed)
 
