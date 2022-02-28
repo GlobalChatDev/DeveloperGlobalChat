@@ -4,7 +4,7 @@ from main import GlobalChatBot
 import typing
 
 
-class Owner(commands.Cog, command_attrs=dict(hidden=True)):
+class Owner(commands.Cog):
     def __init__(self, bot: GlobalChatBot) -> None:
         self.bot: GlobalChatBot = bot
         self.log_channel = discord.TextChannel(
@@ -400,7 +400,7 @@ class Owner(commands.Cog, command_attrs=dict(hidden=True)):
             ),
         )
 
-    @commands.group(brief="Group for blacklist commands.Chat", hidden=True)
+    @commands.group(brief="Group for blacklist commands.Chat")
     async def blacklist(self, ctx: commands.Context):
         return await ctx.send_help(ctx.command)
 
@@ -412,7 +412,7 @@ class Owner(commands.Cog, command_attrs=dict(hidden=True)):
         await self.bot.db.execute("INSERT INTO global_ban(user_id, reason) VALUES ($1, $2)", user.id, reason)
         return await ctx.send(f"Blacklisted user `{user}`."), await self.log_channel.send(f"Blacklisted user `{user}`.")
 
-    @blacklist.command(brief="Add someone to the guild blacklist.", name="guild", hidden=False)
+    @blacklist.command(brief="Add someone to the guild blacklist.", name="guild")
     @commands.has_permissions(administrator=True)
     async def guild_(self, ctx: commands.Context, user: typing.Union[discord.User, discord.Member, int], reason: str):
         if await self.bot.get_guild_blacklist(ctx.guild.id, user.id):
