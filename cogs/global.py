@@ -141,13 +141,13 @@ class GlobalChat(commands.Cog):
 
         await msg.edit("I can now link your channel. Linking....")
 
-        row = await self.bot.db.fetchrow("SELECT * FROM linked_chat WHERE server_id = $1", ctx.guild.id)
+        row = await self.bot.db.fetchrow("SELECT * FROM linked_chat WHERE guild_id = $1", ctx.guild.id)
 
         if row:
             await ctx.send("You already linked a channel, we'll update it right now.")
 
             await self.bot.db.execute(
-                "UPDATE linked_chat SET channel_id = $1 WHERE server_id = $2", ctx.channel.id, ctx.guild.id
+                "UPDATE linked_chat SET channel_id = $1 WHERE guild_id = $2", ctx.channel.id, ctx.guild.id
             )
 
             self.bot.linked_channels.remove(row.get("channel_id"))
@@ -179,14 +179,14 @@ class GlobalChat(commands.Cog):
 
         await msg.edit("I can now unlink your channel, unlinking....")
 
-        row = await self.bot.db.fetchrow("SELECT * FROM linked_chat WHERE server_id = $1", ctx.guild.id)
+        row = await self.bot.db.fetchrow("SELECT * FROM linked_chat WHERE guild_id = $1", ctx.guild.id)
 
         if not row:
             await ctx.send("Can't unlink from a channel that doesn't exist.")
 
         self.bot.linked_channels.remove(row.get("channel_id"))
 
-        await self.bot.db.execute("DELETE FROM linked_chat WHERE server_id = $1", ctx.guild.id)
+        await self.bot.db.execute("DELETE FROM linked_chat WHERE guild_id = $1", ctx.guild.id)
 
         await msg.edit("**`Locked and loaded`** The link has been removed.")
 
