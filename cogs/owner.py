@@ -422,6 +422,14 @@ class Owner(commands.Cog):
         )
         return await ctx.send(f"Blacklisted user `{user}`."), await self.log_channel.send(f"Blacklisted user `{user}`.")
 
+    @blacklist.command(brief="Add someone to the global blacklist.", name="remove")
+    @commands.is_owner()
+    async def global_(self, ctx: commands.Context, user: typing.Union[discord.User, discord.Member, int]):
+        if not await self.bot.get_global_blacklist(user.id):
+            return await ctx.send("That user is not globally blacklisted.")
+        await self.bot.db.execute("DELETE FROM global_ban WHERE user_id = $1", user.id)
+        return await ctx.send(f"UNlacklisted user `{user}`."), await self.log_channel.send(f"Unblacklisted user `{user}`.")
+
 
 def setup(bot: GlobalChatBot):
     bot.add_cog(Owner(bot))

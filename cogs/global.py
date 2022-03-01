@@ -97,7 +97,7 @@ class GlobalChat(commands.Cog):
                 )
 
             for c in self.bot.linked_channels:
-                channel = await self.bot.get_channel(c)
+                channel = discord.TextChannel(state=self.bot._connection, data=await self.bot.http.get_channel(c), guild=discord.Guild(state=bot._connection))
                 # frostii you can make your own method if you want for try_channel, maybe put it in a log or something, if the channel is None, so we can remove the link?
                 if c == message.channel.id:
                     continue
