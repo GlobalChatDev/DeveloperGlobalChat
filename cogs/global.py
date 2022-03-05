@@ -5,6 +5,9 @@ from utils import Censorship
 import traceback
 import cool_utils
 from better_profanity import profanity
+import platform
+import psutil
+import os
 
 
 class GlobalChat(commands.Cog):
@@ -246,6 +249,37 @@ class GlobalChat(commands.Cog):
         for index, value in enumerate(crediting):
             content += f"{index}: {value}\n"
         return await ctx.reply(content)
+
+    @commands.command(brief="Gives the information about the bot.")
+    async def about(self, ctx):
+
+        embed = discord.Embed(title="About Bot:", color=random.randint(0, 16777215), timestamp=ctx.message.created_at)
+
+        embed.add_field(
+            name="Author Information",
+            value="```This bot is made by a couple of developers, check developers to learn more.```",
+            inline=False,
+        )
+
+        embed.add_field(name="Bot Version", value="```1.0.0```")
+
+        embed.add_field(name="Python Version:", value=f"```{platform.python_version()}```")
+
+        embed.add_field(name="Library", value="```discord.py```")
+
+        embed.add_field(name="Discord.Py Version", value=f"```{discord.__version__}```")
+
+        embed.add_field(
+            name="RAM Usage", value=f"```{(psutil.Process(os.getpid()).memory_full_info().rss / 1024**2):.2f} MB```"
+        )
+
+        embed.add_field(name="Servers", value=f"```{len(self.bot.guilds)}```")
+
+        embed.add_field(name="Source code Info:", value=f"```yaml\n{utils.linecount()}```", inline=False)
+
+        embed.set_author(name=f"{self.bot.user}", icon_url=self.bot.user.display_avatar.url)
+
+        await ctx.send(embed=embed)
 
     @commands.command(brief="Source code.")
     async def source(self, ctx):
