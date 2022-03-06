@@ -257,7 +257,7 @@ class GlobalChat(commands.Cog):
 
         embed.add_field(
             name="Author Information",
-            value="```This bot is made by a couple of developers, check developers to learn more.```",
+            value="```This bot is made by a couple of developers, check credits to learn more.```",
             inline=False,
         )
 
