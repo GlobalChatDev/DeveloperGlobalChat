@@ -23,6 +23,28 @@ class GlobalChatBot(commands.Bot):
 
         await super().start(*args, **kwargs)
 
+    async def try_user(self, id: int, /):
+        maybe_user = self.get_user(id)
+
+        if maybe_user is not None:
+            return maybe_user
+
+        try:
+            return await self.fetch_user(id)
+        except discord.errors.NotFound:
+            return None
+
+    async def try_channel(self, id: int, /):
+        maybe_channel = self.get_channel(id)
+
+        if maybe_channel is not None:
+            return maybe_channel
+
+        try:
+            return await self.fetch_channel(id)
+        except discord.errors.NotFound:
+            return None
+
     async def close(self):
         await self.db.close()
         await super().close()

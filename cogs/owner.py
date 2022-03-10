@@ -399,6 +399,7 @@ class Owner(commands.Cog):
                 },
             ),
         )
+        # change this log channel thing and guild thing too?
 
     @commands.group(brief="Group for blacklist commands.", invoke_without_command=True)
     async def blacklist(self, ctx: commands.Context):

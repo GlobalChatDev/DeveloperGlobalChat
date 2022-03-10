@@ -25,24 +25,10 @@ class GlobalChat(commands.Cog):
         # I need to fix all cog_command_error
 
     async def message_converter(self, message: discord.Message):
-        args = message.content
-        args = args or "Test Content"
-
-        try:
-            for x in re.findall(r"<@!?([0-9]{15,20})>", args):
-                user = await self.bot.try_user(int(x))
-
-                print(f"{re.match(rf'<@!?({x})>', args).group()}")
-
-                args = args.replace(f"{re.match(rf'<@!?({x})>', args).group()}", f"@{user}")
-                # fix issue
-
-        except Exception as e:
-            traceback.print_exc()
-            print(f"error occured as {e}.")
+        args = message.content or "Test Content"
+        args = discord.utils.escape_markdown(args)
 
         ctx = await self.bot.get_context(message)
-        args = await commands.clean_content(remove_markdown=True).convert(ctx, args)
         censoring = Censorship(args)
         args_censored = censoring.censor()
         args = profanity.censor(args_censored, censor_char="#")
@@ -100,17 +86,14 @@ class GlobalChat(commands.Cog):
                 )
 
             for c in self.bot.linked_channels:
-                channel = discord.TextChannel(
-                    state=self.bot._connection,
-                    data=await self.bot.http.get_channel(c),
-                    guild=discord.Guild(state=bot._connection),
-                )
-                # frostii you can make your own method if you want for try_channel, maybe put it in a log or something, if the channel is None, so we can remove the link?
+                channel = await self.bot.try_channel(c)
+
                 if c == message.channel.id:
                     continue
 
                 if channel is None:
                     print(c)
+                    # log the channel to double check at some point
 
                 if channel:
                     thing = await self.bot.get_guild_blacklist(channel.guild.id, message.author.id)
@@ -296,7 +279,7 @@ class GlobalChat(commands.Cog):
         embed = discord.Embed(title="Suggestion")
         embed.description = content
         embed.set_footer(icon_url=ctx.author.avatar.url, text=f"Ran by {str(ctx.author)}")
-        await (await self.bot.fetch_channel(947604940774309889)).send(embed=embed)
+        await (await self.bot.try_channel(947604940774309889)).send(embed=embed)
         return await ctx.send(embed=embed)
 
 
