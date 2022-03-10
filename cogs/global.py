@@ -3,7 +3,6 @@ import utils
 import discord, re, random, asyncio
 from utils import Censorship
 import traceback
-import cool_utils
 from better_profanity import profanity
 import platform
 import psutil
@@ -32,8 +31,6 @@ class GlobalChat(commands.Cog):
         censoring = Censorship(args)
         args_censored = censoring.censor()
         args = profanity.censor(args_censored, censor_char="#")
-        args = cool_utils.Links.censor(content=args, censor="#")
-        # using this as a backup, cool_utils and the old better_profanity :)
         return args_censored
 
     @commands.Cog.listener()
