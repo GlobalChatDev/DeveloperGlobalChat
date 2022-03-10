@@ -4,3 +4,4 @@ git+https://github.com/Gorialis/jishaku.git
 git+https://github.com/Rapptz/discord.py
 better-profanity
 python-dotenv
+psutil
