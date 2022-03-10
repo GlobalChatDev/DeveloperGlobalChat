@@ -42,7 +42,7 @@ class GlobalChatBot(commands.Bot):
 
         try:
             return await self.fetch_channel(id)
-        except discord.errors.NotFound:
+        except (discord.errors.NotFound, discord.errors.Forbidden):
             return None
 
     async def close(self):
