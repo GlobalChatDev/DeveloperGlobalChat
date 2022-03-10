@@ -91,7 +91,7 @@ class GlobalChat(commands.Cog):
                 if channel is None:
                     print(c)
                     # log the channel to double check at some point
-                
+
                 dont_send = False
                 if channel:
                     thing = await self.bot.get_guild_blacklist(channel.guild.id, message.author.id)
