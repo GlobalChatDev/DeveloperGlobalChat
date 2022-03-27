@@ -49,6 +49,11 @@ class GlobalChatBot(commands.Bot):
         await self.db.close()
         await super().close()
 
+    async def setup_hook(self):
+        extensions = [ext.rstrip(".py") for ext in os.listdir("./cogs") if os.path.isfile(f"cogs/{ext}")]
+        for cog in extensions:
+            await bot.load_extension(f"cogs.{cog}")
+
 
 bot = GlobalChatBot(
     command_prefix=commands.when_mentioned_or("d!"),
@@ -68,9 +73,5 @@ async def on_error(event, *args, **kwargs):
     error_wanted = traceback.format_exc()
     traceback.print_exc()
 
-
-extensions = [ext.rstrip(".py") for ext in os.listdir("./cogs") if os.path.isfile(f"cogs/{ext}")]
-for cog in extensions:
-    bot.load_extension(f"cogs.{cog}")
 
 bot.run(os.environ["TOKEN"])

@@ -8,7 +8,7 @@ class BasicButtons(discord.ui.View):
         self.value: str = None
 
     @discord.ui.button(label="Accept", style=discord.ButtonStyle.success, emoji="✅")
-    async def accept(self, button: discord.ui.Button, interaction: discord.Interaction):
+    async def accept(self, interaction: discord.Interaction, button: discord.ui.Button):
 
         self.clear_items()
         await interaction.response.edit_message(view=self)
@@ -16,14 +16,14 @@ class BasicButtons(discord.ui.View):
         self.stop()
 
     @discord.ui.button(label="Deny", style=discord.ButtonStyle.danger, emoji="❌")
-    async def denied(self, button: discord.ui.Button, interaction: discord.Interaction):
+    async def denied(self, interaction: discord.Interaction, button: discord.ui.Button):
 
         self.clear_items()
         await interaction.response.edit_message(view=self)
         self.value = False
         self.stop()
 
-    async def interaction_check(self, item: discord.ui.Item, interaction: discord.Interaction):
+    async def interaction_check(self, interaction: discord.Interaction):
 
         if self.ctx.author.id != interaction.user.id:
             return await interaction.response.send_message(

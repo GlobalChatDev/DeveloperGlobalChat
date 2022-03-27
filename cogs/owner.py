@@ -434,5 +434,5 @@ class Owner(commands.Cog):
         )
 
 
-def setup(bot: GlobalChatBot):
-    bot.add_cog(Owner(bot))
+async def setup(bot: GlobalChatBot):
+    await bot.add_cog(Owner(bot))
