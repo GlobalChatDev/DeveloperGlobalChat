@@ -7,6 +7,7 @@ from better_profanity import profanity
 import platform
 import psutil
 import os
+import cool_utils
 
 
 class GlobalChat(commands.Cog):
@@ -31,7 +32,9 @@ class GlobalChat(commands.Cog):
         censoring = Censorship(args)
         args_censored = censoring.censor()
         args = profanity.censor(args_censored, censor_char="#")
-        return args_censored
+        args = cool_utils.Links.censor(content=args, censor="#")
+        # using this as a backup, cool_utils and the old better_profanity :)
+        return args
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
