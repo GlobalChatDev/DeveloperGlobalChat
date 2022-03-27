@@ -12,7 +12,7 @@ class Owner(commands.Cog):
         self.log_channel = await self.bot.try_channel(947882907068956682)
 
     async def cog_load(self):
-        await self.bot.loop.create_task(self.task())
+        self.bot.loop.create_task(self.task())
 
     @commands.group(brief="Group for blacklist commands.", invoke_without_command=True)
     async def blacklist(self, ctx: commands.Context):
