@@ -1,11 +1,10 @@
 from discord.ext import commands
 import discord
-from main import GlobalChatBot
 import typing
 
 
 class Owner(commands.Cog):
-    def __init__(self, bot: GlobalChatBot) -> None:
+    def __init__(self, bot) -> None:
         self.bot = bot
 
     async def task(self):
@@ -48,5 +47,5 @@ class Owner(commands.Cog):
         )
 
 
-async def setup(bot: GlobalChatBot):
+async def setup(bot):
     await bot.add_cog(Owner(bot))
