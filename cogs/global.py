@@ -8,6 +8,7 @@ import platform
 import psutil
 import os
 import cool_utils
+import functools
 
 
 class GlobalChat(commands.Cog):
@@ -24,6 +25,9 @@ class GlobalChat(commands.Cog):
 
         # I need to fix all cog_command_error
 
+    def link_censor(self, text):
+        return cool_utils.Links.censor(content=text, censor="#")
+
     async def message_converter(self, message: discord.Message):
         args = message.content or "Test Content"
         args = discord.utils.escape_markdown(args)
@@ -32,7 +36,8 @@ class GlobalChat(commands.Cog):
         censoring = Censorship(args)
         args_censored = censoring.censor()
         args = profanity.censor(args_censored, censor_char="#")
-        args = cool_utils.Links.censor(content=args, censor="#")
+        censor_func = functools.partial(self.link_censor, args)
+        args = await self.bot.loop.run_in_executor(None, censor_func)
         # using this as a backup, cool_utils and the old better_profanity :)
         return args
 
