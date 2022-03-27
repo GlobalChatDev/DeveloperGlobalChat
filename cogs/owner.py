@@ -6,7 +6,7 @@ import typing
 
 class Owner(commands.Cog):
     def __init__(self, bot: GlobalChatBot) -> None:
-        self.bot: GlobalChatBot = bot
+        self.bot = bot
 
     async def task(self):
         await self.bot.wait_until_ready()
