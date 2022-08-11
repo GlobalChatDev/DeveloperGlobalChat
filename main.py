@@ -67,6 +67,17 @@ bot = GlobalChatBot(
 # if intents break, then re-apply them there and such, a.k.a make sure to add new intents to fix upcoming issues etc.
 
 
+class Help(commands.MinimalHelpCommand): #Better help command
+    async def send_pages(self):
+        destination = self.get_destination()
+        for page in self.paginator.pages:
+            emby = discord.Embed(description=page, color=discord.Colour.burple, timestamp=discord.utils.utcnow())
+            emby.set_footer(text=f"Requested by: {self.context.author}", icon_url=self.context.author.avatar)
+            await destination.send(embed=emby)
+
+bot.help_command = Help()
+
+
 @bot.event
 async def on_error(event, *args, **kwargs):
     more_information = os.sys.exc_info()
