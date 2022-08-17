@@ -116,7 +116,7 @@ class Help(commands.MinimalHelpCommand):  # Better help command
         for page in self.paginator.pages:
             emby = discord.Embed(
                 description=page,
-                #Burple color does not work :(
+                color=discord.Colour.burple,
                 timestamp=discord.utils.utcnow(),
             )
             emby.set_footer(
