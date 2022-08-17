@@ -25,6 +25,8 @@ class GlobalChatBot(commands.Bot):
 
     async def try_user(self, id: int, /):
         maybe_user = self.get_user(id)
+
+
 import discord, asyncpg
 from discord.ext import commands
 import asyncio, os, traceback, dotenv
@@ -37,9 +39,7 @@ class GlobalChatBot(commands.Bot):
         super().__init__(*args, **kwargs)
 
     async def get_global_blacklist(self, user_id: int):
-        return await self.db.fetchrow(
-            "SELECT * FROM global_ban WHERE user_id = $1", user_id
-        )
+        return await self.db.fetchrow("SELECT * FROM global_ban WHERE user_id = $1", user_id)
 
     async def get_guild_blacklist(self, guild_id: int, user_id: int):
         return await self.db.fetchrow(
@@ -83,11 +83,7 @@ class GlobalChatBot(commands.Bot):
         await super().close()
 
     async def setup_hook(self):
-        extensions = [
-            ext.rstrip(".py")
-            for ext in os.listdir("./cogs")
-            if os.path.isfile(f"cogs/{ext}")
-        ]
+        extensions = [ext.rstrip(".py") for ext in os.listdir("./cogs") if os.path.isfile(f"cogs/{ext}")]
         for cog in extensions:
             await bot.load_extension(f"cogs.{cog}")
 
