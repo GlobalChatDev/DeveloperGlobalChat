@@ -1,5 +1,6 @@
 import asyncio
 import os
+import sys
 import traceback
 
 import asyncpg
@@ -137,7 +138,7 @@ bot.help_command = Help()
 
 @bot.event
 async def on_error(event, *args, **kwargs):
-    more_information = os.sys.exc_info()
+    more_information = sys.exc_info()
     error_wanted = traceback.format_exc()
     traceback.print_exc()
 
