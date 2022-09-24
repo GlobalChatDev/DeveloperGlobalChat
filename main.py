@@ -1,6 +1,11 @@
-import discord, asyncpg
+import asyncio
+import os
+import traceback
+
+import asyncpg
+import discord
+import dotenv
 from discord.ext import commands
-import asyncio, os, traceback, dotenv
 
 dotenv.load_dotenv()
 
@@ -27,9 +32,14 @@ class GlobalChatBot(commands.Bot):
         maybe_user = self.get_user(id)
 
 
-import discord, asyncpg
+import asyncio
+import os
+import traceback
+
+import asyncpg
+import discord
+import dotenv
 from discord.ext import commands
-import asyncio, os, traceback, dotenv
 
 dotenv.load_dotenv()
 

@@ -1,5 +1,5 @@
-import sys
 import pathlib
+import sys
 
 
 def linecount():

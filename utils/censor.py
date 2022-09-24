@@ -1,5 +1,5 @@
-from typing import *
 import re
+from typing import *
 
 
 class Censorship:
