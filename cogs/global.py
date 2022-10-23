@@ -1,12 +1,17 @@
-from discord.ext import commands
-import utils
-import discord, re, random, asyncio
-from utils import Censorship
-import traceback
-from better_profanity import profanity
-import platform
-import psutil
+import asyncio
 import os
+import platform
+import random
+import re
+import traceback
+
+import discord
+import psutil
+from better_profanity import profanity
+from discord.ext import commands
+
+import utils
+from utils import Censorship
 
 
 class GlobalChat(commands.Cog):

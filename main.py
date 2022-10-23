@@ -1,6 +1,12 @@
-import discord, asyncpg
+import asyncio
+import os
+import sys
+import traceback
+
+import asyncpg
+import discord
+import dotenv
 from discord.ext import commands
-import asyncio, os, traceback, dotenv
 
 dotenv.load_dotenv()
 
@@ -27,9 +33,14 @@ class GlobalChatBot(commands.Bot):
         maybe_user = self.get_user(id)
 
 
-import discord, asyncpg
+import asyncio
+import os
+import traceback
+
+import asyncpg
+import discord
+import dotenv
 from discord.ext import commands
-import asyncio, os, traceback, dotenv
 
 dotenv.load_dotenv()
 
@@ -127,7 +138,7 @@ bot.help_command = Help()
 
 @bot.event
 async def on_error(event, *args, **kwargs):
-    more_information = os.sys.exc_info()
+    more_information = sys.exc_info()
     error_wanted = traceback.format_exc()
     traceback.print_exc()
 
