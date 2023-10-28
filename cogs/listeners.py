@@ -12,7 +12,7 @@ class Events(commands.Cog):
     async def on_ready(self):
         print("Bot is Ready")
         print(f"Logged in as {self.bot.user}")
-        print(f"Id: {self.bot.user.id}")
+        print(f"ID: {self.bot.user.id}")
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
