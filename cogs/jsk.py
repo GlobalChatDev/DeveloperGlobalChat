@@ -6,7 +6,8 @@ from jishaku.cog import OPTIONAL_FEATURES, STANDARD_FEATURES
 from jishaku.exception_handling import ReplResponseReactor
 from jishaku.features.baseclass import Feature
 from jishaku.functools import AsyncSender
-from jishaku.repl import AsyncCodeExecutor, get_var_dict_from_ctx
+from jishaku.repl import AsyncCodeExecutor
+from jishaku.repl.repl_builtins import get_var_dict_from_ctx
 
 # look into making more jishaku commands: https://jishaku.readthedocs.io/en/latest/cog.html
 
@@ -17,10 +18,9 @@ class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
             await ctx.send(error)
             traceback.print_exc()
 
-        # I need to fix all cog_command_error
 
     @Feature.Command(parent="jsk", name="py", aliases=["python"])
-    async def jsk_python(self, ctx: commands.Context, *, argument: codeblock_converter):
+    async def jsk_python(self, ctx: commands.Context, *, argument: codeblock_converter): # type: ignore
 
         arg_dict = get_var_dict_from_ctx(ctx, "")
         arg_dict.update(get_var_dict_from_ctx(ctx, "_"))
@@ -33,7 +33,7 @@ class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
             async with ReplResponseReactor(ctx.message):
                 with self.submit(ctx):
                     executor = AsyncCodeExecutor(argument.content, scope, arg_dict=arg_dict)
-                    async for send, result in AsyncSender(executor):
+                    async for send, result in AsyncSender(executor): # type: ignore
                         if result is None:
                             continue
 
