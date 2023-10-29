@@ -18,10 +18,8 @@ class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
             await ctx.send(error)
             traceback.print_exc()
 
-
     @Feature.Command(parent="jsk", name="py", aliases=["python"])
-    async def jsk_python(self, ctx: commands.Context, *, argument: codeblock_converter): # type: ignore
-
+    async def jsk_python(self, ctx: commands.Context, *, argument: codeblock_converter):  # type: ignore
         arg_dict = get_var_dict_from_ctx(ctx, "")
         arg_dict.update(get_var_dict_from_ctx(ctx, "_"))
         arg_dict["owners"] = {await ctx.bot.try_user(oid) for oid in ctx.bot.owner_ids}
@@ -33,7 +31,7 @@ class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
             async with ReplResponseReactor(ctx.message):
                 with self.submit(ctx):
                     executor = AsyncCodeExecutor(argument.content, scope, arg_dict=arg_dict)
-                    async for send, result in AsyncSender(executor): # type: ignore
+                    async for send, result in AsyncSender(executor):  # type: ignore
                         if result is None:
                             continue
 
