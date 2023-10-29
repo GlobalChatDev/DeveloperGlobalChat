@@ -3,7 +3,6 @@ from __future__ import annotations
 import asyncio
 import os
 import platform
-import random
 import traceback
 
 import discord
@@ -48,7 +47,7 @@ class LoggedMessages:
 class GlobalChat(commands.Cog):
     def __init__(self, bot: GlobalChatBot):
         self.bot: GlobalChatBot = bot
-        self._cd = commands.CooldownMapping.from_cooldown(3.0, 15.0, commands.BucketType.user)
+        self._cd = commands.CooldownMapping.from_cooldown(5.0, 7.0, commands.BucketType.user)
 
     async def cog_command_error(self, ctx, error: Exception):
         if ctx.command and not ctx.command.has_error_handler():
@@ -91,6 +90,9 @@ class GlobalChat(commands.Cog):
             and not ctx.valid
             and not ctx.prefix
         )
+        
+    async def refresh_linked_data(self):
+        self.bot.linked_data = await self.bot.db.fetchall("SELECT * FROM linked_chat")
 
     async def message_converter(self, message: discord.Message):
         args = message.content or "No content specified."
@@ -117,7 +119,7 @@ class GlobalChat(commands.Cog):
         retry_after = bucket.update_rate_limit()
 
         if retry_after:
-            await asyncio.sleep(15)
+            await asyncio.sleep(7)
 
         name = f"{ctx.author.name}#{ctx.author.discriminator}" if ctx.author.discriminator != '0' else ctx.author.name
         username = name
@@ -184,15 +186,20 @@ class GlobalChat(commands.Cog):
         return await self.bot.db.fetchone("SELECT * FROM linked_chat WHERE guild_id = ?", guild_id)
 
     async def update_linked_channel(self, ctx: commands.Context, row):
+        webhooks = await ctx.channel.webhooks() # type: ignore
+        for webhook in webhooks:
+            await webhook.delete()
         new_webhook = await ctx.channel.create_webhook(name="Global Chat") # type: ignore
         await self.bot.db.execute("UPDATE linked_chat SET webhook_url = ? WHERE guild_id = ?", new_webhook.url, ctx.guild.id)
         self.bot.linked_webhooks.remove(row["webhook_url"])
         self.bot.linked_webhooks.append(new_webhook.url)
+        await self.refresh_linked_data()
 
     async def create_linked_channel(self, ctx: commands.Context):
         new_webhook = await ctx.channel.create_webhook(name="Global Chat") # type: ignore
-        await self.bot.db.execute("INSERT INTO linked_chat VALUES (?, ?)", ctx.guild.id, ctx.channel.id)
+        await self.bot.db.execute("INSERT INTO linked_chat VALUES (?, ?)", ctx.guild.id, new_webhook.url)
         self.bot.linked_webhooks.append(new_webhook.url)
+        await self.refresh_linked_data()
 
     @commands.has_permissions(manage_messages=True)
     @link.command(brief="Removes the current channel's link.")
