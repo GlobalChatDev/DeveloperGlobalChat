@@ -4,12 +4,24 @@ on: [push, pull_request]
 
 jobs:
   black:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.8", "3.9", "3.10"]
 
-      - name: Run linter
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - uses: isort/isort-action@master
+        with:
+          requirementsFiles: "requirements.txt"
+
+      - name: Run formatter
         uses: psf/black@stable
         with:
           options: "--line-length 120 --check"
