@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord.ext.commands.converter import UserConverter
 
 
 class Owner(commands.Cog):
@@ -29,7 +30,7 @@ class Owner(commands.Cog):
 
     @blacklist.command(brief="Add someone to the global blacklist.", name="global")
     @commands.is_owner()
-    async def global_(self, ctx: commands.Context, user: commands.UserConverter, *, reason: str):
+    async def global_(self, ctx: commands.Context, user: UserConverter, *, reason: str):
         if await self.bot.get_global_blacklist(user.id):  # type: ignore
             return await ctx.send("That user is already globally blacklisted.")
         await self.bot.db.execute("INSERT INTO global_ban VALUES (?, ?)", user.id, reason)  # type: ignore
@@ -38,7 +39,7 @@ class Owner(commands.Cog):
 
     @blacklist.group(brief="Add someone to the guild blacklist.", name="guild", invoke_without_command=True)
     @commands.has_permissions(administrator=True)
-    async def guild_(self, ctx: commands.Context, user: commands.UserConverter, *, reason: str):
+    async def guild_(self, ctx: commands.Context, user: UserConverter, *, reason: str):
         if await self.bot.get_guild_blacklist(ctx.guild.id, user.id):  # type: ignore
             return await ctx.send("That user is already blacklisted in this guild.")
         await self.bot.db.execute("INSERT INTO guild_ban VALUES (?, ?, ?)", ctx.guild.id, user.id, reason)  # type: ignore
@@ -47,7 +48,7 @@ class Owner(commands.Cog):
 
     @guild_.command(brief="Remove someone from the guild blacklist.", name="remove")
     @commands.has_permissions(administrator=True)
-    async def guild_remove_(self, ctx: commands.Context, user: commands.UserConverter):
+    async def guild_remove_(self, ctx: commands.Context, user: UserConverter):
         if not await self.bot.get_guild_blacklist(ctx.guild.id, user.id):  # type: ignore
             return await ctx.send("That user is not blacklisted in this guild.")
         await self.bot.db.execute("DELETE FROM guild_ban WHERE guild_id = ? AND user_id = ?", ctx.guild.id, user.id)  # type: ignore
@@ -56,7 +57,7 @@ class Owner(commands.Cog):
 
     @blacklist.command(brief="Remove someone from the global blacklist.", name="remove")
     @commands.is_owner()
-    async def global_remove_(self, ctx: commands.Context, user: commands.UserConverter):
+    async def global_remove_(self, ctx: commands.Context, user: UserConverter):
         if not await self.bot.get_global_blacklist(user.id):  # type: ignore
             return await ctx.send("That user is not globally blacklisted.")
         await self.bot.db.execute("DELETE FROM global_ban WHERE user_id = ?", user.id)  # type: ignore

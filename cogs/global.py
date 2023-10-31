@@ -238,7 +238,7 @@ class GlobalChat(commands.Cog):
         await msg.edit(content="The link has been removed.")
 
     @commands.command(brief="Invite the bot!", aliases=["inv"])
-    async def invite(self, ctx):
+    async def invite(self, ctx: commands.Context):
         minimal_invite = discord.utils.oauth_url(self.bot.user.id, permissions=discord.Permissions(70635073))
         moderate_invite = discord.utils.oauth_url(self.bot.user.id, permissions=discord.Permissions(8))
 
@@ -268,13 +268,13 @@ class GlobalChat(commands.Cog):
         await ctx.send(embed=embed, view=view)
 
     @commands.command(brief="Rules")
-    async def rules(self, ctx):
+    async def rules(self, ctx: commands.Context):
         rules = ["No swearing. Keep it family-friendly.", "No NSFW - Keep it family-friendly."]
         content = "\n".join([f"{index}: {value}" for index, value in enumerate(rules)])
         await ctx.reply(content)
 
     @commands.command()
-    async def credits(self, ctx):
+    async def credits(self, ctx: commands.Context):
         crediting = [
             "Hosting provided by frxstingz - They also provided the current profile picture.",
             "jdjg for founding the project and the basis of the bot.",
@@ -283,7 +283,7 @@ class GlobalChat(commands.Cog):
         await ctx.reply(content)
 
     @commands.command(brief="Gives information about the bot.")
-    async def about(self, ctx):
+    async def about(self, ctx: commands.Context):
         embed = discord.Embed(title="About Bot:")
         embed.add_field(
             name="Author Information",
@@ -301,7 +301,7 @@ class GlobalChat(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(brief="Source code.")
-    async def source(self, ctx):
+    async def source(self, ctx: commands.Context):
         embed = discord.Embed(
             title="Project at:",
             description="We have the MIT License for the project, you may not steal code. Just make it yourself or ask how we do it. Thank you!",

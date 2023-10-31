@@ -2,15 +2,24 @@ from __future__ import annotations
 
 import asyncio
 import os
+import traceback
+from typing import Any, Dict, List, Optional
 
 import discord
 from aiohttp import ClientSession
 from asqlite import create_pool
 from discord.ext import commands
+from discord.ext.commands.cog import Cog
+from discord.ext.commands.core import Command
 from dotenv import load_dotenv
+from itertools import islice
 
 load_dotenv()
 
+def chunks(data, size=3):
+   it = iter(data)
+   for _ in range(0, len(data), size):
+      yield {k:data[k] for k in islice(it, size)}
 
 class GlobalChatBot(commands.Bot):
     def __init__(self, *args, **kwargs):
@@ -87,6 +96,7 @@ class GlobalChatBot(commands.Bot):
             await bot.load_extension(f"cogs.{cog}")
 
         self.session = ClientSession()
+        print([c.signature for c in bot.walk_commands()])
 
 
 bot = GlobalChatBot(
@@ -104,26 +114,7 @@ bot = GlobalChatBot(
     ),
 )
 
-# if intents break, then re-apply them there and such, a.k.a make sure to add new intents to fix upcoming issues etc.
-
-
-class Help(commands.MinimalHelpCommand):  # Better help command
-    async def send_pages(self):
-        destination = self.get_destination()
-        for page in self.paginator.pages:
-            emby = discord.Embed(
-                description=page,
-                color=discord.Colour.blurple(),
-                timestamp=discord.utils.utcnow(),
-            )
-            emby.set_footer(
-                text=f"Requested by: {self.context.author}",
-                icon_url=self.context.author.avatar,
-            )
-            await destination.send(embed=emby)
-
-
-bot.help_command = Help()
+bot.help_command = commands.MinimalHelpCommand()
 
 
 @bot.event
